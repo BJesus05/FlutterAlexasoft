@@ -15,9 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: 'Raleway',
-          colorScheme: const ColorScheme.light()),
+          fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
@@ -41,23 +39,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inicio'),
+        title: Image.asset("assets/logosf.png", width: 125),
       ),
       endDrawer: Drawer(
-        child: ListView(
+        child: Container(
+          
+
+          child: ListView(
+          
           padding: EdgeInsets.zero,
+          
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFF73293D),
-              ),
-              child: Text(
-                'Alexandra Torres',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 37,
-                ),
-              ),
+            ListTile(
+              
+              title: Image.asset("assets/logosf.png"),
+              
             ),
             ListTile(
               leading: const Icon(Icons.home, color: Color(0xFF73293D)),
@@ -85,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
+        )
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
