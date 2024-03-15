@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/register.dart';
+import 'package:flutteralexasoft/citasCreate.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -67,6 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const MyApp(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+              title: const Text('Citas'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RegistrarCitas(),
                   ),
                 );
               },
