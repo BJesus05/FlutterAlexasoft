@@ -60,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.home, color: Color(0xFF73293D)),
               title: const Text('Inicio'),
               onTap: () {
                 Navigator.push(
@@ -71,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.app_registration, color: Color(0xFF73293D)),
               title: const Text('Registrarse'),
               onTap: () {
                 Navigator.push(

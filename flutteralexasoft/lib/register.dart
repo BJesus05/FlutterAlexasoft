@@ -59,6 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.home, color: Color(0xFF73293D)),
               title: const Text('Inicio'),
               onTap: () {
                 Navigator.push(
@@ -70,6 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.login, color: Color(0xFF73293D)),
               title: const Text('Iniciar Sesión'),
               onTap: () {
                 Navigator.push(
