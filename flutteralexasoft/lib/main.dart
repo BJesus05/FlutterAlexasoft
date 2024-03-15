@@ -44,59 +44,50 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Image.asset("assets/logosf.png", width: 125),
       ),
       endDrawer: Drawer(
-        child: Container(
-          
-
-          child: ListView(
-          
-          padding: EdgeInsets.zero,
-          
-          children: [
-            ListTile(
-              
-              title: Image.asset("assets/logosf.png"),
-              
-            ),
-            ListTile(
-              leading: const Icon(Icons.home, color: Color(0xFF73293D)),
-              title: const Text('Inicio'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyApp(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
-              title: const Text('Citas'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RegistrarCitas(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.app_registration, color: Color(0xFF73293D)),
-              title: const Text('Registrarse'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Registrar(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        )
-      ),
+        child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          ListTile(
+            title: Image.asset("assets/logosf.png"),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home, color: Color(0xFF73293D)),
+            title: const Text('Inicio'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyApp(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+            title: const Text('Citas'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RegistrarCitas(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.app_registration, color: Color(0xFF73293D)),
+            title: const Text('Registrarse'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Registrar(),
+                ),
+              );
+            },
+          ),
+        ],
+        )),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Column(
