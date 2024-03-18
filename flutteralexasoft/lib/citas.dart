@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutteralexasoft/citasCreate.dart';
 
 
 class Citas extends StatelessWidget {
@@ -47,17 +48,16 @@ class _CitasPageState extends State<CitasPage> {
       ),
     )
     ),
-    /*floatingActionButton: FloatingActionButton(
+    floatingActionButton: FloatingActionButton(
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const AgregarCita()),
+          MaterialPageRoute(builder: (context) => const RegistrarCitas()),
         );
       },
-      child: const Icon(Icons.add),
       backgroundColor: const Color(0xFF73293D),
-    ),*/
-
+      child: const Icon(Icons.add),
+    ),
     );
   }
 }
