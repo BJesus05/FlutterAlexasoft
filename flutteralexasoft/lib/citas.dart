@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 
-
 class Citas extends StatelessWidget {
   const Citas({super.key});
 
@@ -27,28 +26,25 @@ class CitasPage extends StatefulWidget {
 }
 
 class _CitasPageState extends State<CitasPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Container(
+      body: SingleChildScrollView(
+          child: Container(
         margin: const EdgeInsets.only(top: 40, left: 30, right: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              child: const Text(
-                'Citas',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: const Text(
+                  'Citas',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
               ),
-            ),
-          ]
-      ),
-    )
-    ),
-    floatingActionButton: FloatingActionButton(
+            ]),
+      )),
+      floatingActionButton: FloatingActionButton(
       onPressed: () {
         Navigator.push(
           context,
@@ -56,7 +52,6 @@ class _CitasPageState extends State<CitasPage> {
         );
       },
       backgroundColor: const Color(0xFF73293D),
-      child: const Icon(Icons.add),
     ),
     );
   }

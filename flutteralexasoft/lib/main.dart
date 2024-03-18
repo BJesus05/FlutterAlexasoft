@@ -5,7 +5,6 @@ import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -17,8 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-          fontFamily: 'Raleway'),
+      theme: ThemeData(fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
@@ -45,71 +43,51 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Image.asset("assets/logosf.png", width: 125),
       ),
       endDrawer: Drawer(
-        child: Container(
-          
-
           child: ListView(
-          
-          padding: EdgeInsets.zero,
-          
-          children: [
-            ListTile(
-              
-              title: Image.asset("assets/logosf.png"),
-              
-            ),
-            ListTile(
-              leading: const Icon(Icons.home, color: Color(0xFF73293D)),
-              title: const Text('Inicio'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyApp(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
-              title: const Text('Citas'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Citas(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.schedule_send, color: Color(0xFF73293D)),
-              title: const Text('Registrar Citas'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RegistrarCitas(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.app_registration, color: Color(0xFF73293D)),
-              title: const Text('Registrarse'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Registrar(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        )
-      ),
+        padding: EdgeInsets.zero,
+        children: [
+          ListTile(
+            title: Image.asset("assets/logosf.png"),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home, color: Color(0xFF73293D)),
+            title: const Text('Inicio'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyApp(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+            title: const Text('Citas'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RegistrarCitas(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading:
+                const Icon(Icons.app_registration, color: Color(0xFF73293D)),
+            title: const Text('Registrarse'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Registrar(),
+                ),
+              );
+            },
+          ),
+        ],
+      )),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Column(

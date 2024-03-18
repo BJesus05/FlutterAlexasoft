@@ -321,9 +321,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         borderRadius:
                                             BorderRadius.circular(3.0),
                                       ),
-                                      backgroundColor:
-                                          const Color.fromARGB(
-                                              255, 12, 195, 106),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 12, 195, 106),
                                     ));
                                   }
                                 },
