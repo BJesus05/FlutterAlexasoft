@@ -1,6 +1,7 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 
@@ -72,6 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
               title: const Text('Citas'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Citas(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule_send, color: Color(0xFF73293D)),
+              title: const Text('Registrar Citas'),
               onTap: () {
                 Navigator.push(
                   context,

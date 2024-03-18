@@ -166,7 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                           )),
                       Padding(
-                          padding: const EdgeInsets.only(top: 30),
+                          padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: InputDecoration(
                                 hintText: 'Instagram (Opcional)',
@@ -189,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                           )),
                       Padding(
-                          padding: const EdgeInsets.only(top: 30),
+                          padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: InputDecoration(
                                 hintText: 'Teléfono',
