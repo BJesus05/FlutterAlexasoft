@@ -1,7 +1,6 @@
 // ignore_for_file: unused_field, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
-import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 
