@@ -1,8 +1,9 @@
 // ignore_for_file: unused_field, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
-import 'package:flutteralexasoft/citasCreate.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'AlexaSoft Team',
       theme: ThemeData(fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
@@ -22,7 +23,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-enum SinginCharacter { femenino, masculino }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const RegistrarCitas(),
+                  builder: (context) => const Citas(),
                 ),
               );
             },

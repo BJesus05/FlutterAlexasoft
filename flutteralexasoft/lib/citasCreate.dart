@@ -1,7 +1,14 @@
-// ignore_for_file: unused_field, non_constant_identifier_names, file_names
+// ignore_for_file: unused_field, non_constant_identifier_names, file_names, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/main.dart';
+
+const List<String> colaborador = <String>[
+  'Pneumonoultramicroscopisilicovolcanoconiosis',
+  'Pablo Diego Jose Francisco de Paula Juan Nepomuceno Maria de los Remedios Cipriano de la Santisima Trinidad Ruiz y Picasso',
+  'Simon Jose Antonio de la Santisima Trinidad Bolivar Palacios Ponte y Blanco',
+  'Pentakismyriohexakisquilioletracosiohexacontapentagonalis'
+];
 
 class RegistrarCitas extends StatelessWidget {
   const RegistrarCitas({super.key});
@@ -28,11 +35,32 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  List<String> colaborador = ['Juan', 'Pedro', 'Maria', 'Luis'];
-
   String _selectedColaborador = '';
   final String _Detalles = '';
   final _formKey = GlobalKey<FormState>();
+  String dropdownValue = colaborador.first;
+
+  String _descripcion = '';
+
+  DateTime? _selectedDate;
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Selected ${_selectedDate}")));
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,30 +122,84 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text('!Crea tu citas ya!'),
-                ),
                 Form(
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
                         Padding(
-                            padding: const EdgeInsets.only(top: 30),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: colaborador.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    title: Text(colaborador[index]),
-                                    onTap: () {
-                                      setState(() {
-                                        colaborador = [colaborador[index]];
-                                      });
-                                    },
-                                  );
-                                })),
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                "Colaborador",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Spacer(),
+                              SizedBox(
+                                width: 230,
+                                child: DropdownButton<String>(
+                                  value: dropdownValue,
+                                  elevation: 16,
+                                  icon: const Icon(
+                                    Icons.person_2_sharp,
+                                    color: Colors.amber,
+                                  ),
+                                  style:
+                                      const TextStyle(color: Color(0xFF73293D)),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Color(0xFF73293D),
+                                  ),
+                                  onChanged: (String? value) {
+                                    // This is called when the user selects an item.
+                                    setState(() {
+                                      dropdownValue = value!;
+                                    });
+                                  },
+                                  items: colaborador
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: SizedBox(
+                                        width: 200,
+                                        child: Text(
+                                          value,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                  hintText: 'Descripción',
+                                  hintStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600),
+                                  fillColor: Colors.grey.shade200,
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 0, style: BorderStyle.none),
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 0, style: BorderStyle.none),
+                                  ),
+                                  filled: true),
+                              onSaved: (value) {
+                                setState(() {
+                                  _descripcion = value.toString();
+                                });
+                              },
+                            )),
+                        /*Padding(
                           padding: const EdgeInsets.only(top: 30),
                           child: DropdownButtonFormField<String>(
                             decoration: InputDecoration(
@@ -154,7 +236,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               return null;
                             },
                           ),
-                        ),
+                        ),*/
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 30),
                           child: SizedBox(
@@ -210,6 +292,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white)),
                               )),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 30),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                _selectedDate == null
+                                    ? "No has seleccionado una fecha"
+                                    : "Fecha seleccionada: ${_selectedDate}",
+                              ),
+                              ElevatedButton(
+                                onPressed: _presentDatePicker,
+                                child: const Text("Seleccionar fecha"),
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     )),
