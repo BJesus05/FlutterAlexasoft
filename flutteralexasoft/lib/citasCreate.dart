@@ -130,48 +130,49 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 30),
                           child: Row(
                             children: <Widget>[
-                              Text(
-                                "Colaborador",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              Spacer(),
-                              SizedBox(
-                                width: 230,
-                                child: DropdownButton<String>(
-                                  value: dropdownValue,
-                                  elevation: 16,
-                                  icon: const Icon(
-                                    Icons.person_2_sharp,
-                                    color: Colors.amber,
-                                  ),
-                                  style:
-                                      const TextStyle(color: Color(0xFF73293D)),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Color(0xFF73293D),
-                                  ),
-                                  onChanged: (String? value) {
-                                    // This is called when the user selects an item.
-                                    setState(() {
-                                      dropdownValue = value!;
-                                    });
-                                  },
-                                  items: colaborador
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: SizedBox(
-                                        width: 200,
-                                        child: Text(
-                                          value,
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
+                              
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  isExpanded: true,
+                          decoration: InputDecoration(
+                            hintText: 'Colaborador',
+                            hintStyle:
+                                const TextStyle(fontWeight: FontWeight.w600),
+                            prefixIcon: const Icon(Icons.person),
+                            fillColor: Colors.grey.shade200,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          items: colaborador
+                              .map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value, style: const TextStyle(overflow: TextOverflow.ellipsis), maxLines: 2),
+
+                            );
+                          }).toList(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor seleccione el nombre del empleado';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            // Actualiza el valor seleccionado del empleado 
+                          },
+                          onSaved: (value) {
+                            // Guarda el valor seleccionado del empleado 
+                          },
+                        ),
                               ),
                             ],
                           ),

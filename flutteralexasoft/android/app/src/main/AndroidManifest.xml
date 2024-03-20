@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="flutteralexasoft"
+        android:label="AlexaSoft"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/mofongo">
         <activity
             android:name=".MainActivity"
             android:exported="true"
