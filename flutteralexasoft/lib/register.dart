@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 import 'package:flutter/material.dart';
+import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
 
 class Registrar extends StatelessWidget {
@@ -43,48 +44,51 @@ class _RegisterPageState extends State<RegisterPage> {
         title: const Text('Inicio'),
       ),
       endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFF73293D),
-              ),
-              child: Text(
-                'Alexandra Torres',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 37,
+          child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          ListTile(
+            title: Image.asset("assets/logosf.png"),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home, color: Color(0xFF73293D)),
+            title: const Text('Inicio'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyApp(),
                 ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home, color: Color(0xFF73293D)),
-              title: const Text('Inicio'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyApp(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.login, color: Color(0xFF73293D)),
-              title: const Text('Iniciar Sesión'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyApp(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+            title: const Text('Citas'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Citas(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading:
+                const Icon(Icons.app_registration, color: Color(0xFF73293D)),
+            title: const Text('Registrarse'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Registrar(),
+                ),
+              );
+            },
+          ),
+        ],
+      )),
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(top: 0, left: 30, right: 30),
