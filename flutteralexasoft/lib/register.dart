@@ -4,7 +4,7 @@ import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
 
 class Registrar extends StatelessWidget {
-  const Registrar({Key? key}) : super(key: key);
+  const Registrar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +21,8 @@ class Registrar extends StatelessWidget {
   }
 }
 
-enum SinginCharacter { femenino, masculino }
-
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

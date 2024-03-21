@@ -4,28 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AlexaSoft Team',
-      theme: ThemeData(fontFamily: 'Raleway'),
+      theme: ThemeData(
+          fontFamily: 'Raleway', colorScheme: const ColorScheme.dark(),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 43, 31, 31),
+          
+          ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
   }
 }
 
-
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -39,17 +41,20 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset("assets/logosf.png", width: 125),
+        title: Image.asset("assets/logobarrasf.png", width: 250),
       ),
       endDrawer: Drawer(
           child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          ListTile(
-            title: Image.asset("assets/logosf.png"),
+          const SizedBox(
+            height: 38,
           ),
           ListTile(
-            leading: const Icon(Icons.home, color: Color(0xFF73293D)),
+            title: Image.asset("assets/logobarrasf.png"),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
             title: const Text('Inicio'),
             onTap: () {
               Navigator.push(
@@ -61,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+            leading: const Icon(Icons.schedule),
             title: const Text('Citas'),
             onTap: () {
               Navigator.push(
@@ -73,8 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
           ListTile(
-            leading:
-                const Icon(Icons.app_registration, color: Color(0xFF73293D)),
+            leading: const Icon(Icons.app_registration),
             title: const Text('Registrarse'),
             onTap: () {
               Navigator.push(
@@ -110,16 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: TextFormField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               hintText: 'Correo',
-                              hintStyle:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                              fillColor: Colors.grey.shade200,
-                              focusedBorder: const OutlineInputBorder(
+                              hintStyle: TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Color.fromARGB(255, 89, 89, 89),
+                              focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     width: 0, style: BorderStyle.none),
                               ),
-                              enabledBorder: const OutlineInputBorder(
+                              enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     width: 0, style: BorderStyle.none),
                               ),
@@ -146,16 +149,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               _password = value;
                             });
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               hintText: 'Contraseña',
-                              hintStyle:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                              fillColor: Colors.grey.shade200,
-                              focusedBorder: const OutlineInputBorder(
+                              hintStyle: TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Color.fromARGB(255, 89, 89, 89),
+                              focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     width: 0, style: BorderStyle.none),
                               ),
-                              enabledBorder: const OutlineInputBorder(
+                              enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     width: 0, style: BorderStyle.none),
                               ),
@@ -187,11 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Icon(
-                                          Icons.check_circle,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        ),
+                                        Icon(Icons.check_circle),
                                         SizedBox(
                                           width: 5,
                                         ),
@@ -218,7 +216,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF73293D),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 27, 29, 29),
                                 foregroundColor: Colors.white,
                               ),
                               child: const Text('Login')),
@@ -241,7 +240,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF73293D)),
+                  backgroundColor: const Color.fromARGB(255, 27, 29, 29)),
               child: const Text(
                 'Registrarse',
                 style: TextStyle(color: Colors.white),
@@ -252,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: const Color.fromARGB(158, 115, 41, 61),
+        color: const Color.fromARGB(255, 27, 29, 29),
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,

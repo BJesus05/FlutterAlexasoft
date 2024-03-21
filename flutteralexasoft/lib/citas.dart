@@ -20,7 +20,7 @@ class Citas extends StatelessWidget {
 }
 
 class CitasPage extends StatefulWidget {
-  const CitasPage({Key? key}) : super(key: key);
+  const CitasPage({super.key});
 
   @override
   State<CitasPage> createState() => _CitasPageState();

@@ -28,7 +28,7 @@ class RegistrarCitas extends StatelessWidget {
 }
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -57,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _selectedDate = pickedDate;
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Selected ${_selectedDate}")));
+            .showSnackBar(SnackBar(content: Text("Selected $_selectedDate")));
       });
     });
   }
@@ -295,14 +295,14 @@ class _RegisterPageState extends State<RegisterPage> {
                               )),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 30),
+                          padding: const EdgeInsets.symmetric(vertical: 30),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
                                 _selectedDate == null
                                     ? "No has seleccionado una fecha"
-                                    : "Fecha seleccionada: ${_selectedDate}",
+                                    : "Fecha seleccionada: $_selectedDate",
                               ),
                               ElevatedButton(
                                 onPressed: _presentDatePicker,

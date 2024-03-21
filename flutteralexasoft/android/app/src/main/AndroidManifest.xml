@@ -2,7 +2,7 @@
     <application
         android:label="AlexaSoft"
         android:name="${applicationName}"
-        android:icon="@mipmap/mofongo">
+        android:icon="@mipmap/logoalexa">
         <activity
             android:name=".MainActivity"
             android:exported="true"
