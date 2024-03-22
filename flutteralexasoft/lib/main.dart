@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, avoid_unnecessary_containers
+// ignore_for_file: unused_field, avoid_unnecessary_containers, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
@@ -23,7 +23,39 @@ class MyApp extends StatelessWidget {
             const TextSelectionThemeData(cursorColor: Colors.white),
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToHome(); // Inicia la navegación al home después de un tiempo
+  }
+
+  void _navigateToHome() {
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => const MyHomePage()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Image.asset('assets/logobarrasf.png'), // Ajusta esta imagen según tu logo o diseño
+      ),
     );
   }
 }
