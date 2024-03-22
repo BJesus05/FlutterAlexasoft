@@ -16,10 +16,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AlexaSoft Team',
       theme: ThemeData(
-          fontFamily: 'Raleway', colorScheme: const ColorScheme.dark(),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 43, 31, 31),
-          
-          ),
+        fontFamily: 'Raleway',
+        colorScheme: const ColorScheme.dark(),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 59, 59, 59),
+        textSelectionTheme:
+            const TextSelectionThemeData(cursorColor: Colors.white),
+      ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
@@ -116,7 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: TextFormField(
                           decoration: const InputDecoration(
                               hintText: 'Correo',
-                              hintStyle: TextStyle(fontWeight: FontWeight.w600),
+                              hintStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
                               fillColor: Color.fromARGB(255, 89, 89, 89),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -151,7 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           decoration: const InputDecoration(
                               hintText: 'Contraseña',
-                              hintStyle: TextStyle(fontWeight: FontWeight.w600),
+                              hintStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
                               fillColor: Color.fromARGB(255, 89, 89, 89),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -194,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          "Te haz logueado correctamente. Bienvenido!",
+                                          "Te haz logueado correctamente",
                                           style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 255, 255, 255)),
@@ -224,27 +230,34 @@ class _MyHomePageState extends State<MyHomePage> {
                         )),
                   ],
                 )),
-            const Text(
-              "¿No tienes cuenta?",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Registrar(),
+            Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Center the content horizontally
+              children: [
+                const Text(
+                  "¿No tienes cuenta?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 10.0),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Registrar()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                    child: const Text(
+                      'Registrarse',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 27, 29, 29)),
-              child: const Text(
-                'Registrarse',
-                style: TextStyle(color: Colors.white),
-              ),
+                ),
+              ],
             ),
             const SizedBox(height: 20.0),
           ],

@@ -9,11 +9,14 @@ class Registrar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'AlexaSoft Team',
       theme: ThemeData(
         primarySwatch: Colors.red,
         fontFamily: 'Raleway',
-        colorScheme: const ColorScheme.light(),
+        colorScheme: const ColorScheme.dark(),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 59, 59, 59),
+        textSelectionTheme:
+            const TextSelectionThemeData(cursorColor: Colors.white),
       ),
       debugShowCheckedModeBanner: false,
       home: const RegisterPage(),
@@ -39,17 +42,20 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inicio'),
+        title: Image.asset("assets/logobarrasf.png", width: 250),
       ),
       endDrawer: Drawer(
           child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          ListTile(
-            title: Image.asset("assets/logosf.png"),
+          const SizedBox(
+            height: 38,
           ),
           ListTile(
-            leading: const Icon(Icons.home, color: Color(0xFF73293D)),
+            title: Image.asset("assets/logobarrasf.png"),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
             title: const Text('Inicio'),
             onTap: () {
               Navigator.push(
@@ -61,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+            leading: const Icon(Icons.schedule),
             title: const Text('Citas'),
             onTap: () {
               Navigator.push(
@@ -72,24 +78,11 @@ class _RegisterPageState extends State<RegisterPage> {
               );
             },
           ),
-          ListTile(
-            leading:
-                const Icon(Icons.app_registration, color: Color(0xFF73293D)),
-            title: const Text('Registrarse'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Registrar(),
-                ),
-              );
-            },
-          ),
         ],
       )),
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(top: 0, left: 30, right: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -111,16 +104,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       Padding(
                           padding: const EdgeInsets.only(top: 30),
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Nombre completo',
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                                fillColor: Colors.grey.shade200,
-                                focusedBorder: const OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
@@ -140,16 +134,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Correo',
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                                fillColor: Colors.grey.shade200,
-                                focusedBorder: const OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
@@ -170,16 +165,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Instagram (Opcional)',
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                                fillColor: Colors.grey.shade200,
-                                focusedBorder: const OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
@@ -193,16 +189,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Teléfono',
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                                fillColor: Colors.grey.shade200,
-                                focusedBorder: const OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
@@ -228,16 +225,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _password = value;
                               });
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Contraseña',
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                                fillColor: Colors.grey.shade200,
-                                focusedBorder: const OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
@@ -259,16 +257,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             obscureText: true,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Confirmar contraseña',
-                                hintStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                                fillColor: Colors.grey.shade200,
-                                focusedBorder: const OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 0, style: BorderStyle.none),
                                 ),
@@ -329,34 +328,41 @@ class _RegisterPageState extends State<RegisterPage> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF73293D),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 27, 29, 29),
                                   foregroundColor: Colors.white,
                                 ),
                                 child: const Text('Registrarse')),
                           )),
                     ],
                   )),
-              const Text(
-                "¿Ya tienes cuenta?",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 10.0),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MyApp(),
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center the content horizontally
+                children: [
+                  const Text(
+                    "¿Ya tienes una cuenta?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 10.0),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyApp()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      child: const Text(
+                        'Inicia sesisón',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF73293D)),
-                child: const Text(
-                  'Inicia Sesión',
-                  style: TextStyle(color: Colors.white),
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20.0),
             ],
@@ -364,7 +370,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: const Color.fromARGB(158, 115, 41, 61),
+        color: const Color.fromARGB(255, 27, 29, 29),
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,

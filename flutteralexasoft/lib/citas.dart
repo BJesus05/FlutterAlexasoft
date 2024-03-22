@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
-
+import 'package:flutteralexasoft/main.dart';
 
 class Citas extends StatelessWidget {
   const Citas({super.key});
@@ -8,11 +8,14 @@ class Citas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Citas',
+      title: 'AlexaSoft Team',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: 'Raleway',
-          colorScheme: const ColorScheme.light()),
+        fontFamily: 'Raleway',
+        colorScheme: const ColorScheme.dark(),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 59, 59, 59),
+        textSelectionTheme:
+            const TextSelectionThemeData(cursorColor: Colors.white),
+      ),
       debugShowCheckedModeBanner: false,
       home: const CitasPage(),
     );
@@ -30,22 +33,31 @@ class _CitasPageState extends State<CitasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Luxury by Experts", style: TextStyle(fontStyle: FontStyle.italic),) //Image.asset("assets/logosf.png", width: 125),
-      ),
+      appBar: AppBar(title: Image.asset("assets/logobarrasf.png", width: 250)),
       endDrawer: Drawer(
           child: ListView(
         padding: EdgeInsets.zero,
         children: [
           const SizedBox(
-            height: 40,
+            height: 38,
           ),
           ListTile(
-            title: Image.asset("assets/logosf.png"),
+            title: Image.asset("assets/logobarrasf.png"),
           ),
-          
           ListTile(
-            leading: const Icon(Icons.schedule, color: Color(0xFF73293D)),
+            leading: const Icon(Icons.home),
+            title: const Text('Inicio'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyApp(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.schedule),
             title: const Text('Citas'),
             onTap: () {
               Navigator.push(
@@ -72,7 +84,7 @@ class _CitasPageState extends State<CitasPage> {
       )),
       body: SingleChildScrollView(
           child: Container(
-        margin: const EdgeInsets.only(top: 0, left: 30, right: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -105,8 +117,8 @@ class _CitasPageState extends State<CitasPage> {
             MaterialPageRoute(builder: (context) => const RegistrarCitas()),
           );
         },
-        backgroundColor: const Color(0xFF73293D),
-        child: const Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 27, 29, 29),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
