@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 30),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Nombre completo',
+                                hintText: 'Nombre completo*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -135,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Correo',
+                                hintText: 'Correo*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -190,7 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Teléfono',
+                                hintText: 'Teléfono*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -226,7 +226,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               });
                             },
                             decoration: const InputDecoration(
-                                hintText: 'Contraseña',
+                                hintText: 'Contraseña*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -258,7 +258,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: TextFormField(
                             obscureText: true,
                             decoration: const InputDecoration(
-                                hintText: 'Confirmar contraseña',
+                                hintText: 'Confirmar contraseña*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -274,7 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 filled: true),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Repite la contraseña porfavor';
                               }
                               if (value != _password) {
                                 return 'Las contraseñas no coinciden';

@@ -16,7 +16,7 @@ class SQLHelper {
     await database.execute("""CREATE TABLE Servicios(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         nombre TEXT,
-        descripcion TEXT, 
+        descripcion TEXT,
         tiempoMinutos INTEGER
       )
       """);
