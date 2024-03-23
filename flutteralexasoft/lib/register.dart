@@ -4,6 +4,10 @@ import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
 
+//----ESTO ES PARA VER LA CONTRASEÑA----
+bool _showPassword = false;
+//--------------------------------------
+
 class Registrar extends StatelessWidget {
   const Registrar({super.key});
 
@@ -122,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 30),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Nombre completo',
+                                hintText: 'Nombre completo*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -152,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Correo',
+                                hintText: 'Correo*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -213,7 +217,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Teléfono',
+                                hintText: 'Teléfono*',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -240,71 +244,103 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                           )),
                       Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: TextFormField(
-                            obscureText: true,
-                            onChanged: (value) {
-                              setState(() {
-                                _password = value;
-                              });
-                            },
-                            decoration: const InputDecoration(
-                                hintText: 'Contraseña',
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            TextFormField(
+                              obscureText: !_showPassword,
+                              onChanged: (value) {
+                                setState(() {
+                                  _password = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Contraseña*',
                                 hintStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                                 fillColor: Color.fromARGB(255, 89, 89, 89),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 0, style: BorderStyle.none),
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      width: 0, style: BorderStyle.none),
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
                                 ),
-                                filled: true),
-                            validator: (value) {
-                              String pattern =
-                                  r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
-                              RegExp regExp = RegExp(pattern);
-                              if (value!.isEmpty) {
-                                return "La contraseña es necesaria";
-                              } else if (!regExp.hasMatch(value)) {
-                                return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
-                              } else {
-                                return null;
-                              }
-                            },
-                          )),
+                                filled: true,
+                              ),
+                              validator: (value) {
+                                String pattern =
+                                    r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
+                                RegExp regExp = RegExp(pattern);
+                                if (value!.isEmpty) {
+                                  return "La contraseña es necesaria";
+                                } else if (!regExp.hasMatch(value)) {
+                                  return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                _showPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _showPassword = !_showPassword;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                       Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: TextFormField(
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                                hintText: 'Confirmar contraseña',
-                                hintStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                                fillColor: Color.fromARGB(255, 89, 89, 89),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 0, style: BorderStyle.none),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 0, style: BorderStyle.none),
-                                ),
-                                filled: true),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              if (value != _password) {
-                                return 'Las contraseñas no coinciden';
-                              }
-                              return null;
-                            },
-                          )),
+                        padding: const EdgeInsets.only(top: 15),
+                        child: TextFormField(
+                          obscureText: !_showPassword,
+                          decoration: const InputDecoration(
+                            hintText: 'Confirmar contraseña*',
+                            hintStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                            fillColor: Color.fromARGB(255, 89, 89, 89),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
+                            ),
+                            filled: true,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            if (value != _password) {
+                              return 'Las contraseñas no coinciden';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                       Padding(
                           padding: const EdgeInsets.symmetric(vertical: 30),
                           child: SizedBox(
@@ -350,11 +386,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                           255, 12, 195, 106),
                                     ));
                                     Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const MyApp(),
-                                    ),
-                                  );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MyApp(),
+                                      ),
+                                    );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -387,7 +423,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20.0, vertical: 10.0),
                       child: const Text(
-                        'Inicia sesisón',
+                        'Inicia sesión',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

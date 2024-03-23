@@ -16,7 +16,7 @@ class SQLHelper {
     await database.execute("""CREATE TABLE Servicios(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         nombre TEXT,
-        descripcion TEXT, 
+        descripcion TEXT,
         tiempoMinutos INTEGER
       )
       """);
@@ -59,7 +59,7 @@ class SQLHelper {
         ("Pedro Ramirez")
         """);
 
-        await database.execute("""INSERT INTO Servicios (nombre,descripcion,tiempoMinutos) VALUES 
+        await database.execute("""INSERT INTO Servicios (nombre,descripcion,tiempoMinutos) VALUES
         ("Corte de pelo", "Se le cortara el pelo", 32),
         ("Secado de Pelo", "Se le quitara la humedad al pelo", 15),
         ("Peinado", "Se le peinara el pelo", 40),
@@ -68,7 +68,7 @@ class SQLHelper {
       """);
 
       await database.execute("""INSERT INTO Paquetes
-      (nombre,descripcion) VALUES 
+      (nombre,descripcion) VALUES
       ("Blower", "Se hara un trabajo espectacular"),
       ("Estilo de Uñas", "Quedaran lindas")
       """);
@@ -100,7 +100,7 @@ class SQLHelper {
         id_Usuario,
         id_Paquete,
         id_Colaborador
-        ) VALUES 
+        ) VALUES
         ("Quiero que sean amable conmigo cuando me corten el pelo, tengo miedo", "13/04/2024", "16:30", "En espera", 1, 1, 1)
         """);
 
@@ -147,10 +147,10 @@ class SQLHelper {
   //---------------------------------------PARA INICIO DE SESION------------------------------------------------------------
 
 static Future<List<Map<String, dynamic>>> obtenerLibrosInicioSesion(String correo, String contrasena) async {
+  print('Correo: $correo, Contraseña: $contrasena');
   final db = await SQLHelper.db();
   return db.query('Usuario', where: "correo = ? AND contrasena = ?", whereArgs: [correo, contrasena], limit: 1);
 }
-
 
 //---------------------------------------------------------------------------------------------------------------------------
 
