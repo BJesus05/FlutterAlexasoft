@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
-import 'package:flutteralexasoft/verUsuario.dart'; // Importa la clase SQLHelper
+import 'package:flutteralexasoft/verUsuario.dart';
+
+//----ESTO ES PARA VER LA CONTRASEÑA----
+bool _showPassword = false;
+//--------------------------------------
 
 void main() {
   runApp(const MyApp());
@@ -256,46 +260,66 @@ Future<void> _loginUser() async {
                       },
                     ),
                   ),
-                    Padding(
+                  Padding(
                         padding: const EdgeInsets.only(top: 15),
-                        child: TextFormField(
-                          obscureText: true,
-                          onChanged: (value) {
-                            setState(() {
-                              contrasena = value;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                              hintText: 'Contraseña',
-                              hintStyle: TextStyle(
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            TextFormField(
+                              obscureText: !_showPassword,
+                              onChanged: (value) {
+                                setState(() {
+                                  contrasena = value;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Contraseña',
+                                hintStyle: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                              fillColor: Color.fromARGB(255, 89, 89, 89),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 0, style: BorderStyle.none),
+                                  color: Colors.white,
+                                ),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                                filled: true,
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 0, style: BorderStyle.none),
+                              validator: (value) {
+                                String pattern =
+                                    r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
+                                RegExp regExp = RegExp(pattern);
+                                if (value!.isEmpty) {
+                                  return "La contraseña es necesaria";
+                                } else if (!regExp.hasMatch(value)) {
+                                  return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                _showPassword ? Icons.visibility : Icons.visibility_off,
+                                color: Colors.white,
                               ),
-                              filled: true),
-                          validator: (value) {
-                            //String pattern =
-                              //  r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
-                            //RegExp regExp = RegExp(pattern);
-                            if (value!.isEmpty) {
-                              return "La contraseña es necesaria";
-                            } 
-                            
-                            //else if (!regExp.hasMatch(value)) {
-                              //return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
-                            //}
-                             else {
-                              return null;
-                            }
-                          },
-                        )),
+                              onPressed: () {
+                                setState(() {
+                                  _showPassword = !_showPassword;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 30),
                         child: SizedBox(
