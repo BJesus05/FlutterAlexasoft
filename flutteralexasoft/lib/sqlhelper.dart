@@ -147,7 +147,6 @@ class SQLHelper {
   //---------------------------------------PARA INICIO DE SESION------------------------------------------------------------
 
 static Future<List<Map<String, dynamic>>> obtenerLibrosInicioSesion(String correo, String contrasena) async {
-  print('Correo: $correo, Contraseña: $contrasena');
   final db = await SQLHelper.db();
   return db.query('Usuario', where: "correo = ? AND contrasena = ?", whereArgs: [correo, contrasena], limit: 1);
 }
