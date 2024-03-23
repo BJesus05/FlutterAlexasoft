@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset('assets/logobarrasf.png'), // Ajusta esta imagen según tu logo o diseño
+        child: Image.asset('assets/iniciosf.png'), // Ajusta esta imagen según tu logo o diseño
       ),
     );
   }

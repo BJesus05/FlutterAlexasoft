@@ -68,7 +68,7 @@ class SQLHelper {
       """);
 
       await database.execute("""INSERT INTO Paquetes
-      (nombre,descripcion) VALUES 
+      (nombre,descripcion) VALUES
       ("Blower", "Se hara un trabajo espectacular"),
       ("Estilo de Uñas", "Quedaran lindas")
       """);
@@ -100,7 +100,7 @@ class SQLHelper {
         id_Usuario,
         id_Paquete,
         id_Colaborador
-        ) VALUES 
+        ) VALUES
         ("Quiero que sean amable conmigo cuando me corten el pelo, tengo miedo", "13/04/2024", "16:30", "En espera", 1, 1, 1)
         """);
 
