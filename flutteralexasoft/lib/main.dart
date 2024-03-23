@@ -77,18 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Future<void> _loginUser() async {
   String correo = correoController.text;
-  // Obtener todos los usuarios de la base de datos
-  final todosLosUsuarios = await SQLHelper.obtenerLibros();
-  print('Usuarios en la base de datos: $todosLosUsuarios');
-
-  print("$correo");
-
-  // Buscar el usuario por correo y contraseña
   final usuarios = await SQLHelper.obtenerLibrosInicioSesion(correo, contrasena);
-  print('Usuarios encontrados: $usuarios');
-
   if (usuarios.isNotEmpty) {
-    print('El usuario ha iniciado sesión correctamente.');
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -115,7 +105,6 @@ Future<void> _loginUser() async {
     MaterialPageRoute(builder: (context) => Citas()), // Reemplaza OtraVentana() con el widget de tu siguiente pantalla
   );
   } else {
-    print('El usuario no se encontró en la base de datos.');
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Row(
         mainAxisAlignment: MainAxisAlignment.start,
