@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
+import 'package:flutteralexasoft/sqlhelper.dart';
 
 class Registrar extends StatelessWidget {
   const Registrar({super.key});
@@ -33,10 +34,26 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   int _telefono = 0;
+  String _correo = '';
   String _instagram = '';
   String _nombre = '';
   final _formKey = GlobalKey<FormState>();
   String _password = '';
+
+  Future<void> _addLibro() async {
+    // Guarda los datos solo si el formulario es válido
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!
+          .save(); // Guarda los valores en las variables correspondientes
+      await SQLHelper.createLibros(
+        _nombre,
+        _correo,
+        _instagram,
+        _telefono.toString(),
+        _password,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 30),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Nombre completo*',
+                                hintText: 'Nombre completo',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -135,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Correo*',
+                                hintText: 'Correo',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -160,6 +177,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               } else {
                                 return null;
                               }
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                _correo = value
+                                    .toString(); // Guarda el valor en la variable _correo
+                              });
                             },
                           )),
                       Padding(
@@ -190,7 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.only(top: 15),
                           child: TextFormField(
                             decoration: const InputDecoration(
-                                hintText: 'Teléfono*',
+                                hintText: 'Teléfono',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -226,7 +249,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               });
                             },
                             decoration: const InputDecoration(
-                                hintText: 'Contraseña*',
+                                hintText: 'Contraseña',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -258,7 +281,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: TextFormField(
                             obscureText: true,
                             decoration: const InputDecoration(
-                                hintText: 'Confirmar contraseña*',
+                                hintText: 'Confirmar contraseña',
                                 hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
@@ -274,7 +297,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 filled: true),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Repite la contraseña porfavor';
+                                return 'Please enter some text';
                               }
                               if (value != _password) {
                                 return 'Las contraseñas no coinciden';
@@ -290,6 +313,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: ElevatedButton(
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
+                                    _addLibro(); // Llama a la función para guardar el usuario en la base de datos
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       content: const Row(
@@ -325,6 +349,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                       backgroundColor: const Color.fromARGB(
                                           255, 12, 195, 106),
                                     ));
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const MyApp(),
+                                    ),
+                                  );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

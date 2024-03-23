@@ -4,7 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
-import 'package:flutteralexasoft/sqlhelper.dart'; // Importa la clase SQLHelper
+import 'package:flutteralexasoft/sqlhelper.dart';
+import 'package:flutteralexasoft/verUsuario.dart'; // Importa la clase SQLHelper
 
 void main() {
   runApp(const MyApp());
@@ -179,6 +180,18 @@ Future<void> _loginUser() async {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const Registrar(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_circle_outlined),
+            title: const Text('RegisterView'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RegistroView(),
                 ),
               );
             },
