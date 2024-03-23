@@ -102,7 +102,7 @@ Future<void> _loginUser() async {
     ));
     Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => Citas()), // Reemplaza OtraVentana() con el widget de tu siguiente pantalla
+    MaterialPageRoute(builder: (context) => const Citas()), // Reemplaza OtraVentana() con el widget de tu siguiente pantalla
   );
   } else {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -268,9 +268,9 @@ Future<void> _loginUser() async {
                               ),
                               filled: true),
                           validator: (value) {
-                            String pattern =
-                                r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
-                            RegExp regExp = RegExp(pattern);
+                            //String pattern =
+                              //  r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
+                            //RegExp regExp = RegExp(pattern);
                             if (value!.isEmpty) {
                               return "La contraseña es necesaria";
                             } 
