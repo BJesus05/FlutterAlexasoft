@@ -16,7 +16,7 @@ class SQLHelper {
     await database.execute("""CREATE TABLE Servicios(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         nombre TEXT,
-        descripcion TEXT,
+        descripcion TEXT, 
         tiempoMinutos INTEGER
       )
       """);
@@ -68,7 +68,7 @@ class SQLHelper {
       """);
 
       await database.execute("""INSERT INTO Paquetes
-      (nombre,descripcion) VALUES
+      (nombre,descripcion) VALUES 
       ("Blower", "Se hara un trabajo espectacular"),
       ("Estilo de Uñas", "Quedaran lindas")
       """);
@@ -100,7 +100,7 @@ class SQLHelper {
         id_Usuario,
         id_Paquete,
         id_Colaborador
-        ) VALUES
+        ) VALUES 
         ("Quiero que sean amable conmigo cuando me corten el pelo, tengo miedo", "13/04/2024", "16:30", "En espera", 1, 1, 1)
         """);
 
@@ -143,6 +143,17 @@ class SQLHelper {
     final db = await SQLHelper.db();
     return db.query('Usuario', where: "id = ?", whereArgs: [id], limit: 1);
   }
+
+  //---------------------------------------PARA INICIO DE SESION------------------------------------------------------------
+
+static Future<List<Map<String, dynamic>>> obtenerLibrosInicioSesion(String correo, String contrasena) async {
+  print('Correo: $correo, Contraseña: $contrasena');
+  final db = await SQLHelper.db();
+  return db.query('Usuario', where: "correo = ? AND contrasena = ?", whereArgs: [correo, contrasena], limit: 1);
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
 
   // Update an item by id
   static Future<int> actualizarLibros(int id, String nombre, String? correo,

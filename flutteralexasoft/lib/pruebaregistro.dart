@@ -368,9 +368,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   foregroundColor: Colors.white,
                                 ),
                                 child: const Text('Registrarse')),
-                               
                           )),
-                          
                     ],
                   )),
               Row(

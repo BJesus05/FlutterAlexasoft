@@ -1,8 +1,10 @@
 // ignore_for_file: unused_field, avoid_unnecessary_containers, library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
+import 'package:flutteralexasoft/sqlhelper.dart'; // Importa la clase SQLHelper
 
 void main() {
   runApp(const MyApp());
@@ -69,7 +71,76 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
-  String _password = '';
+  String contrasena = '';
+  TextEditingController correoController = TextEditingController(); // Controlador para el campo de correo
+
+
+Future<void> _loginUser() async {
+  String correo = correoController.text;
+  // Obtener todos los usuarios de la base de datos
+  final todosLosUsuarios = await SQLHelper.obtenerLibros();
+  print('Usuarios en la base de datos: $todosLosUsuarios');
+
+  print("$correo");
+
+  // Buscar el usuario por correo y contraseña
+  final usuarios = await SQLHelper.obtenerLibrosInicioSesion(correo, contrasena);
+  print('Usuarios encontrados: $usuarios');
+
+  if (usuarios.isNotEmpty) {
+    print('El usuario ha iniciado sesión correctamente.');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(Icons.check_circle),
+          SizedBox(width: 5),
+          Text(
+            "Te has logueado correctamente",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          )
+        ],
+      ),
+      duration: const Duration(milliseconds: 5000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+    ));
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Citas()), // Reemplaza OtraVentana() con el widget de tu siguiente pantalla
+  );
+  } else {
+    print('El usuario no se encontró en la base de datos.');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(Icons.error),
+          SizedBox(width: 5),
+          Text(
+            "El correo o contraseña son incorrectos",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          )
+        ],
+      ),
+      duration: const Duration(milliseconds: 5000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -142,47 +213,54 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('¡Ya puedes loguearte, bienvenido!'),
             ),
             Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                              hintText: 'Correo',
-                              hintStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                              fillColor: Color.fromARGB(255, 89, 89, 89),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 0, style: BorderStyle.none),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 0, style: BorderStyle.none),
-                              ),
-                              filled: true),
-                          validator: (value) {
-                            String pattern =
-                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                            RegExp regExp = RegExp(pattern);
-                            if (value!.isEmpty) {
-                              return "El correo es necesario";
-                            } else if (!regExp.hasMatch(value)) {
-                              return "Correo invalido";
-                            } else {
-                              return null;
-                            }
-                          },
-                        )),
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: TextFormField(
+                      controller: correoController,
+                      decoration: const InputDecoration(
+                        hintText: 'Correo',
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                        fillColor: Color.fromARGB(255, 89, 89, 89),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                        filled: true,
+                      ),
+                      validator: (value) {
+                        String pattern =
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                        RegExp regExp = RegExp(pattern);
+                        if (value!.isEmpty) {
+                          return "El correo es necesario";
+                        } else if (!regExp.hasMatch(value)) {
+                          return "Correo invalido";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
                     Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: TextFormField(
                           obscureText: true,
                           onChanged: (value) {
                             setState(() {
-                              _password = value;
+                              contrasena = value;
                             });
                           },
                           decoration: const InputDecoration(
@@ -206,9 +284,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             RegExp regExp = RegExp(pattern);
                             if (value!.isEmpty) {
                               return "La contraseña es necesaria";
-                            } else if (!regExp.hasMatch(value)) {
-                              return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
-                            } else {
+                            } 
+                            
+                            //else if (!regExp.hasMatch(value)) {
+                              //return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
+                            //}
+                             else {
                               return null;
                             }
                           },
@@ -219,39 +300,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: double.infinity,
                           height: 45,
                           child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Icon(Icons.check_circle),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "Te haz logueado correctamente",
-                                          style: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 255, 255, 255)),
-                                        )
-                                      ],
-                                    ),
-                                    duration:
-                                        const Duration(milliseconds: 5000),
-                                    width: 300,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0, vertical: 10),
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(3.0),
-                                    ),
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 12, 195, 106),
-                                  ));
-                                }
+                                    await _loginUser();
+                                  }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
