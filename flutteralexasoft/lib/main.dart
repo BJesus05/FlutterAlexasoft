@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Future<void> _loginUser() async {
   String correo = correoController.text;
-  final usuarios = await SQLHelper.obtenerLibrosInicioSesion(correo, contrasena);
+  final usuarios = await SQLHelper.obtenerUsuariosInicioSesion(correo, contrasena);
   if (usuarios.isNotEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: const Row(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 import 'package:flutteralexasoft/main.dart';
+import 'package:flutteralexasoft/sqlhelper.dart';
 
 class Citas extends StatelessWidget {
   const Citas({super.key});
@@ -30,6 +31,23 @@ class CitasPage extends StatefulWidget {
 }
 
 class _CitasPageState extends State<CitasPage> {
+  int?
+      userId; // Variable para almacenar el ID del usuario que ha iniciado sesión
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerIdUsuario(); // Obtener el ID del usuario al cargar la vista
+  }
+
+  Future<void> obtenerIdUsuario() async {
+    final user = await SQLHelper.obtenerUsuariosInicioSesion('correo',
+        'contrasena'); // Reemplaza 'correo' y 'contrasena' con las credenciales del usuario
+    setState(() {
+      userId = user.isNotEmpty ? user[0]['id'] : null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

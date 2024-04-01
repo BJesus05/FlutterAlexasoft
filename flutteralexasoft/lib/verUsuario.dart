@@ -19,7 +19,7 @@ class _RegistroViewState extends State<RegistroView> {
 
   Future<void> obtenerRegistros() async {
     final List<Map<String, dynamic>> listaRegistros =
-        await SQLHelper.obtenerLibros();
+        await SQLHelper.obtenerUsuarios();
     setState(() {
       registros = listaRegistros;
     });

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
+import 'package:flutteralexasoft/sqlhelper.dart';
 
 const List<String> colaborador = <String>[
   'Pneumonoultramicroscopisilicovolcanoconiosis',
@@ -12,7 +13,9 @@ const List<String> colaborador = <String>[
 ];
 
 class RegistrarCitas extends StatelessWidget {
-  const RegistrarCitas({super.key});
+  final int? userId; // Recibir el ID del usuario como argumento
+
+  const RegistrarCitas({Key? key, this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,8 @@ class RegistrarCitas extends StatelessWidget {
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+  
+  int? get userId => null;
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -64,6 +69,36 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
+
+List<Map<String, dynamic>> _colaboradores = [];
+List<Map<String, dynamic>> _paquetes = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerDatos();
+  }
+
+  Future<void> obtenerDatos() async {
+    final List<Map<String, dynamic>> colaboradores =
+        await SQLHelper.obtenerUsuarios();
+    final List<Map<String, dynamic>> paquetes =
+        await SQLHelper.obtenerUsuarios();
+    setState(() {
+      _colaboradores = colaboradores;
+      _paquetes = paquetes;
+    });
+  }
+  // This function is used to fetch all data from the database
+  void _refreshJournals() async {
+    final colaboradores = await SQLHelper.obtenerColaboradores();
+    final paquetes = await SQLHelper.obtenerPaquetes();
+    setState(() {
+      _colaboradores = colaboradores;
+      _paquetes = paquetes;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,42 +298,33 @@ class _RegisterPageState extends State<RegisterPage> {
                               width: double.infinity,
                               height: 45,
                               child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.check_circle,
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "Cita creada correctamente",
-                                            style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 255, 255, 255)),
-                                          )
-                                        ],
-                                      ),
-                                      duration:
-                                          const Duration(milliseconds: 2000),
-                                      width: 300,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 10),
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(3.0),
-                                      ),
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 12, 195, 106),
+                                    await SQLHelper.guardarCita(_descripcion, _selectedDate, _selectedColaborador, widget.userId);
+      
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.check_circle,
+                                              color: Color.fromARGB(255, 255, 255, 255),
+                                            ),
+                                            SizedBox(width: 5,),
+                                            Text(
+                                              "Cita creada correctamente",
+                                              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                                            )
+                                          ],
+                                        ),
+                                        duration: const Duration(milliseconds: 2000),
+                                        width: 300,
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(3.0),
+                                        ),
+                                        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
                                     ));
                                   }
                                 },

@@ -30,11 +30,14 @@ class Registrar extends StatelessWidget {
 }
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final int? userId; // Recibir el ID del usuario como argumento
+
+  const RegisterPage({Key? key, this.userId}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
+
 
 class _RegisterPageState extends State<RegisterPage> {
   int _telefono = 0;
@@ -49,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!
           .save(); // Guarda los valores en las variables correspondientes
-      await SQLHelper.createLibros(
+      await SQLHelper.CrearUsuario(
         _nombre,
         _correo,
         _instagram,

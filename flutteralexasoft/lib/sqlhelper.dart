@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLHelper {
@@ -89,7 +88,7 @@ class SQLHelper {
         instagram,
         telefono,
         contrasena
-      ) VALUES ("Joselito", "jose@gmail.com", "josuel_xxx", "3015648374", "jose1234")
+      ) VALUES ("Joselito", "jose@gmail.com", "josuel_xxx", "3015648374", "Jose1234#")
       """);
 
       await database.execute("""INSERT INTO Citas(
@@ -109,7 +108,7 @@ class SQLHelper {
 
   static Future<sql.Database> db() async {
     return sql.openDatabase(
-      'bookstore.db',
+      'alexasoft.db',
       version: 1,
       onCreate: (sql.Database database, int version) async {
         await createTables(database);
@@ -118,7 +117,7 @@ class SQLHelper {
   }
 
   // Create new usuario in the database
-  static Future<int> createLibros(String nombre, String? correo,
+  static Future<int> CrearUsuario(String nombre, String? correo,
       String? instagram, String? telefono, String contrasena) async {
     final db = await SQLHelper.db();
 
@@ -134,51 +133,59 @@ class SQLHelper {
     return id;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerLibros() async {
+  static Future<List<Map<String, dynamic>>> obtenerUsuarios() async {
     final db = await SQLHelper.db();
     return db.query('Usuario', orderBy: "id");
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerLibro(int id) async {
+  static Future<List<Map<String, dynamic>>> obtenerColaboradores() async {
+    final db = await SQLHelper.db();
+    return db.query('Colaboradores', orderBy: "id");
+  }
+
+static Future<List<Map<String, dynamic>>> obtenerPaquetes() async {
+  final db = await SQLHelper.db();
+  return db.rawQuery('''
+    SELECT Paquetes.id AS paquete_id, Paquetes.nombre AS paquete_nombre,
+           Paquetes.descripcion AS paquete_descripcion,
+           Servicios.id AS servicio_id, Servicios.nombre AS servicio_nombre,
+           Servicios.descripcion AS servicio_descripcion, Servicios.tiempoMinutos AS servicio_tiempoMinutos
+    FROM Paquetes
+    INNER JOIN Paquetes_Servicios ON Paquetes.id = Paquetes_Servicios.id_Paquete
+    INNER JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
+    ORDER BY Paquetes.id
+  ''');
+}
+
+  
+
+  static Future<List<Map<String, dynamic>>> obtenerUsuario(int id) async {
     final db = await SQLHelper.db();
     return db.query('Usuario', where: "id = ?", whereArgs: [id], limit: 1);
   }
 
-  //---------------------------------------PARA INICIO DE SESION------------------------------------------------------------
 
-static Future<List<Map<String, dynamic>>> obtenerLibrosInicioSesion(String correo, String contrasena) async {
-  print('Correo: $correo, Contraseña: $contrasena');
+static Future<List<Map<String, dynamic>>> obtenerUsuariosInicioSesion(String correo, String contrasena) async {
   final db = await SQLHelper.db();
   return db.query('Usuario', where: "correo = ? AND contrasena = ?", whereArgs: [correo, contrasena], limit: 1);
 }
 
-//---------------------------------------------------------------------------------------------------------------------------
+static Future<void> guardarCita(String detalle, DateTime? fecha, String colaborador, int? userId) async {
+  final db = await SQLHelper.db();
+  await db.insert('Citas', {
+    'detalle': detalle,
+    'fecha': fecha.toString(),
+    'id_Usuario': userId, // Guardar el ID del usuario con la cita
+    // Resto de los campos de la cita
+  });
+}
 
-  // Update an item by id
-  static Future<int> actualizarLibros(int id, String nombre, String? correo,
-      String? instagram, String? telefono, String? contrasena) async {
-    final db = await SQLHelper.db();
 
-    final data = {
-      'nombre': nombre,
-      'correo': correo,
-      'instagram': instagram,
-      'telefono': telefono,
-      'contrasena': contrasena
-    };
 
-    final result =
-        await db.update('Usuario', data, where: "id = ?", whereArgs: [id]);
-    return result;
-  }
 
-  // Delete
-  static Future<void> eliminarLibros(int id) async {
-    final db = await SQLHelper.db();
-    try {
-      await db.delete("Usuario", where: "id = ?", whereArgs: [id]);
-    } catch (err) {
-      debugPrint("Se ha eliminado el Usuario: $err");
-    }
-  }
+  
+    
+
+  
+ 
 }
