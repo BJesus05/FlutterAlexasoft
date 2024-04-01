@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, non_constant_identifier_names, file_names, prefer_final_fields
+// ignore_for_file: unused_field, non_constant_identifier_names, file_names, prefer_final_fields, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
@@ -15,7 +15,7 @@ const List<String> colaborador = <String>[
 class RegistrarCitas extends StatelessWidget {
   final int? userId; // Recibir el ID del usuario como argumento
 
-  const RegistrarCitas({Key? key, this.userId}) : super(key: key);
+  const RegistrarCitas({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,10 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
 
 class RegistroView extends StatefulWidget {
-  const RegistroView({Key? key}) : super(key: key);
+  const RegistroView({super.key});
 
   @override
   _RegistroViewState createState() => _RegistroViewState();
@@ -29,13 +31,13 @@ class _RegistroViewState extends State<RegistroView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Registros'),
+        title: const Text('Lista de Registros'),
       ),
       body: ListView.builder(
         itemCount: registros.length,
         itemBuilder: (context, index) {
           return Card(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             elevation: 3,
             child: ListTile(
               title: Text('Nombre: ${registros[index]['nombre']}'),

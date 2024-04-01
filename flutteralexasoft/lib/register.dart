@@ -32,7 +32,7 @@ class Registrar extends StatelessWidget {
 class RegisterPage extends StatefulWidget {
   final int? userId; // Recibir el ID del usuario como argumento
 
-  const RegisterPage({Key? key, this.userId}) : super(key: key);
+  const RegisterPage({super.key, this.userId});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
