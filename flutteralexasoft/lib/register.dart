@@ -4,9 +4,7 @@ import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
 
-//----ESTO ES PARA VER LA CONTRASEÑA----
 bool _showPassword = false;
-//--------------------------------------
 
 class Registrar extends StatelessWidget {
   const Registrar({super.key});

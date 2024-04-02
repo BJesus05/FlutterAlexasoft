@@ -1,15 +1,15 @@
-// ignore_for_file: unused_field, avoid_unnecessary_containers, library_private_types_in_public_api
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
 import 'package:flutteralexasoft/verUsuario.dart';
 
-//----ESTO ES PARA VER LA CONTRASEÑA----
+bool _showSplash = true;
 bool _showPassword = false;
-//--------------------------------------
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             const TextSelectionThemeData(cursorColor: Colors.white),
       ),
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+      home: _showSplash ? const SplashScreen() : const MyHomePage(),
     );
   }
 }
@@ -43,25 +43,43 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _showImage = true;
+
   @override
   void initState() {
     super.initState();
-    _navigateToHome(); // Inicia la navegación al home después de un tiempo
+    _loadMainPage();
   }
 
-  void _navigateToHome() {
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => const MyHomePage()),
-      );
+  void _loadMainPage() async {
+    await Future.delayed(const Duration(seconds: 3));
+    setState(() {
+      _showImage = false;
     });
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyHomePage()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset('assets/iniciosf.png'), // Ajusta esta imagen según tu logo o diseño
+        child: _showImage
+            ? Column(
+                key: const Key('image'),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/iniciosf.png'),
+                  const SizedBox(height: 20),
+                ],
+              )
+            : const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Color.fromARGB(255, 238, 211, 59)),
+              ),
       ),
     );
   }
@@ -77,64 +95,68 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   String contrasena = '';
-  TextEditingController correoController = TextEditingController(); // Controlador para el campo de correo
+  TextEditingController correoController = TextEditingController();
+  bool _showProgress = false;
 
-
-Future<void> _loginUser() async {
-  String correo = correoController.text;
-  final usuarios = await SQLHelper.obtenerUsuariosInicioSesion(correo, contrasena);
-  if (usuarios.isNotEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Icon(Icons.check_circle),
-          SizedBox(width: 5),
-          Text(
-            "Te has logueado correctamente",
-            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-          )
-        ],
-      ),
-      duration: const Duration(milliseconds: 5000),
-      width: 300,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(3.0),
-      ),
-      backgroundColor: const Color.fromARGB(255, 12, 195, 106),
-    ));
-    Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const Citas()), // Reemplaza OtraVentana() con el widget de tu siguiente pantalla
-  );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Icon(Icons.error),
-          SizedBox(width: 5),
-          Text(
-            "El correo o contraseña son incorrectos",
-            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-          )
-        ],
-      ),
-      duration: const Duration(milliseconds: 5000),
-      width: 300,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(3.0),
-      ),
-      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
-    ));
+  Future<void> _loginUser() async {
+    setState(() {
+      _showProgress = true; // Mostrar el indicador de progreso
+    });
+    String correo = correoController.text;
+    final usuarios =
+        await SQLHelper.obtenerUsuariosInicioSesion(correo, contrasena);
+          await Future.delayed(const Duration(seconds: 2));
+    if (usuarios.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(Icons.check_circle),
+            SizedBox(width: 5),
+            Text(
+              "Te has logueado correctamente",
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+            )
+          ],
+        ),
+        duration: const Duration(milliseconds: 5000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+      ));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Citas()));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(Icons.error),
+            SizedBox(width: 5),
+            Text(
+              "El correo o contraseña son incorrectos",
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+            )
+          ],
+        ),
+        duration: const Duration(milliseconds: 5000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+      ));
+    }
+    setState(() {
+      _showProgress = false;
+    });
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -156,12 +178,7 @@ Future<void> _loginUser() async {
             leading: const Icon(Icons.home),
             title: const Text('Inicio'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MyApp(),
-                ),
-              );
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -229,8 +246,7 @@ Future<void> _loginUser() async {
                       decoration: const InputDecoration(
                         hintText: 'Correo',
                         hintStyle: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
+                            fontWeight: FontWeight.w600, color: Colors.white),
                         fillColor: Color.fromARGB(255, 89, 89, 89),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -261,88 +277,92 @@ Future<void> _loginUser() async {
                     ),
                   ),
                   Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Stack(
-                          alignment: Alignment.centerRight,
-                          children: [
-                            TextFormField(
-                              obscureText: !_showPassword,
-                              onChanged: (value) {
-                                setState(() {
-                                  contrasena = value;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                hintText: 'Contraseña',
-                                hintStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                                fillColor: Color.fromARGB(255, 89, 89, 89),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                ),
-                                filled: true,
-                              ),
-                              validator: (value) {
-                                String pattern =
-                                    r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
-                                RegExp regExp = RegExp(pattern);
-                                if (value!.isEmpty) {
-                                  return "La contraseña es necesaria";
-                                } else if (!regExp.hasMatch(value)) {
-                                  return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
-                                } else {
-                                  return null;
-                                }
-                              },
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        TextFormField(
+                          obscureText: !_showPassword,
+                          onChanged: (value) {
+                            setState(() {
+                              contrasena = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Contraseña',
+                            hintStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
-                            IconButton(
-                              icon: Icon(
-                                _showPassword ? Icons.visibility : Icons.visibility_off,
-                                color: Colors.white,
+                            fillColor: Color.fromARGB(255, 89, 89, 89),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _showPassword = !_showPassword;
-                                });
-                              },
                             ),
-                          ],
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
+                            ),
+                            filled: true,
+                          ),
+                          validator: (value) {
+                            String pattern =
+                                r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$';
+                            RegExp regExp = RegExp(pattern);
+                            if (value!.isEmpty) {
+                              return "La contraseña es necesaria";
+                            } else if (!regExp.hasMatch(value)) {
+                              return "La contraseña debe tener al menos 8 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
+                        IconButton(
+                          icon: Icon(
+                            _showPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _showPassword = !_showPassword;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 45,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await _loginUser();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 27, 29, 29),
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Login'),
                       ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 45,
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                    await _loginUser();
-                                  }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 27, 29, 29),
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Text('Login')),
-                        )),
-                  ],
-                )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Center the content horizontally
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   "¿No tienes cuenta?",
@@ -355,7 +375,8 @@ Future<void> _loginUser() async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Registrar()),
+                        builder: (context) => const Registrar(),
+                      ),
                     );
                   },
                   child: Container(
@@ -386,6 +407,13 @@ Future<void> _loginUser() async {
           ],
         ),
       ),
+      // Mostrar el indicador de progreso si _showProgress es true
+      floatingActionButton: _showProgress
+          ? const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Color.fromARGB(255, 238, 211, 59)), // Cambia el color aquí
+            )
+          : null,
     );
   }
 }

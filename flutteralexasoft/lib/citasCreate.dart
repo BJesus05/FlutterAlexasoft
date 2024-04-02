@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, non_constant_identifier_names, file_names, prefer_final_fields, use_build_context_synchronously
+// ignore_for_file: unused_field, non_constant_identifier_names, file_names, prefer_final_fields, use_build_context_synchronously, unused_element
 
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
@@ -13,7 +13,7 @@ const List<String> colaborador = <String>[
 ];
 
 class RegistrarCitas extends StatelessWidget {
-  final int? userId; // Recibir el ID del usuario como argumento
+  final int? userId;
 
   const RegistrarCitas({super.key, this.userId});
 
@@ -90,7 +90,6 @@ List<Map<String, dynamic>> _paquetes = [];
       _paquetes = paquetes;
     });
   }
-  // This function is used to fetch all data from the database
   void _refreshJournals() async {
     final colaboradores = await SQLHelper.obtenerColaboradores();
     final paquetes = await SQLHelper.obtenerPaquetes();
