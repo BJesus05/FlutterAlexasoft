@@ -5,13 +5,6 @@ import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
 
-const List<String> colaborador = <String>[
-  'Pneumonoultramicroscopisilicovolcanoconiosis',
-  'Pablo Diego Jose Francisco de Paula Juan Nepomuceno Maria de los Remedios Cipriano de la Santisima Trinidad Ruiz y Picasso',
-  'Simon Jose Antonio de la Santisima Trinidad Bolivar Palacios Ponte y Blanco',
-  'Pentakismyriohexakisquilioletracosiohexacontapentagonalis'
-];
-
 class RegistrarCitas extends StatelessWidget {
   final int? userId;
 
@@ -36,7 +29,7 @@ class RegistrarCitas extends StatelessWidget {
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
-  
+
   int? get userId => null;
 
   @override
@@ -47,9 +40,38 @@ class _RegisterPageState extends State<RegisterPage> {
   String _selectedColaborador = '';
   final String _Detalles = '';
   final _formKey = GlobalKey<FormState>();
-  String dropdownValue = colaborador.first;
   String _descripcion = '';
   DateTime? _selectedDate;
+  DateTime? _selectedDateTime;
+
+  Future<void> _presentDateTimePicker() async {
+    final DateTime now = DateTime.now();
+    final DateTime? pickedDateTime = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: now, // Restringe las fechas anteriores al día actual
+      lastDate:
+          DateTime(now.year + 1), // Permite fechas hasta 1 año en el futuro
+    );
+
+    if (pickedDateTime != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (pickedTime != null) {
+        setState(() {
+          _selectedDateTime = DateTime(
+            pickedDateTime.year,
+            pickedDateTime.month,
+            pickedDateTime.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+        });
+      }
+    }
+  }
 
   void _presentDatePicker() {
     showDatePicker(
@@ -69,25 +91,18 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-
-List<Map<String, dynamic>> _colaboradores = [];
-List<Map<String, dynamic>> _paquetes = [];
-
-
+  List<Map<String, dynamic>> _colaboradores = [];
+  List<Map<String, dynamic>> _paquetes = [];
   @override
   void initState() {
     super.initState();
-    obtenerDatos();
+    obtenerColaboradores();
   }
 
-  Future<void> obtenerDatos() async {
-    final List<Map<String, dynamic>> colaboradores =
-        await SQLHelper.obtenerUsuarios();
-    final List<Map<String, dynamic>> paquetes =
-        await SQLHelper.obtenerUsuarios();
+ Future<void> obtenerColaboradores() async {
+    final colaboradores = await SQLHelper.obtenerColaboradores();
     setState(() {
-      _colaboradores = colaboradores;
-      _paquetes = paquetes;
+      _colaboradores = colaboradores; 
     });
   }
   void _refreshJournals() async {
@@ -98,6 +113,7 @@ List<Map<String, dynamic>> _paquetes = [];
       _paquetes = paquetes;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,51 +179,50 @@ List<Map<String, dynamic>> _paquetes = [];
                           child: Row(
                             children: <Widget>[
                               Expanded(
-                                child: DropdownButtonFormField<String>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    hintText: 'Colaborador',
-                                    hintStyle: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white),
-                                    prefixIcon: const Icon(Icons.person),
-                                    fillColor:
-                                        const Color.fromARGB(255, 89, 89, 89),
-                                    filled: true,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  items: colaborador.map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value,
-                                          style: const TextStyle(
-                                              overflow: TextOverflow.ellipsis),
-                                          maxLines: 2),
-                                    );
-                                  }).toList(),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor seleccione el nombre del empleado';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    // Actualiza el valor seleccionado del empleado
-                                  },
-                                  onSaved: (value) {
-                                    // Guarda el valor seleccionado del empleado
-                                  },
+                                  child: DropdownButtonFormField<int>( // Cambio a tipo int para el ID del colaborador
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                hintText: 'Colaborador',
+                                hintStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                prefixIcon: Icon(Icons.person),
+                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                filled: true,
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
+                              items: _colaboradores.map<DropdownMenuItem<int>>((colaborador) { // Mapeo usando _colaboradores
+                                return DropdownMenuItem<int>(
+                                  value: colaborador['id'], // Asigna el ID del colaborador como valor
+                                  child: Text(colaborador['nombre']), // Muestra el nombre del colaborador
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Por favor selecciona el nombre del colaborador';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedColaborador = value!.toString(); // Asigna el valor seleccionado a _selectedColaborador
+                                });
+                              },
+                              onSaved: (value) {
+                                setState(() {
+                                  _selectedColaborador = value!.toString(); // Asigna el valor seleccionado a _selectedColaborador
+                                });
+                              },
+),),
                             ],
                           ),
                         ),
@@ -279,14 +294,19 @@ List<Map<String, dynamic>> _paquetes = [];
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                _selectedDate == null
-                                    ? "No has seleccionado una fecha"
-                                    : "Fecha seleccionada: $_selectedDate",
+                                _selectedDateTime == null
+                                    ? 'No has seleccionado fecha y hora'
+                                    : 'Fecha y Hora seleccionadas: ${_selectedDateTime.toString()}',
+                                style: TextStyle(fontSize: 18.0),
                               ),
+                              SizedBox(height: 20.0),
                               ElevatedButton(
-                                onPressed: _presentDatePicker,
-                                child: const Text("Seleccionar fecha",
-                                    style: TextStyle(color: Colors.white)),
+                                onPressed: _presentDateTimePicker,
+                                child: Text(
+                                  'Seleccionar Fecha y Hora',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(238, 211, 59, 1)),
+                                ),
                               ),
                             ],
                           ),
@@ -299,31 +319,46 @@ List<Map<String, dynamic>> _paquetes = [];
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    await SQLHelper.guardarCita(_descripcion, _selectedDate, _selectedColaborador, widget.userId);
-      
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: const Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.check_circle,
-                                              color: Color.fromARGB(255, 255, 255, 255),
-                                            ),
-                                            SizedBox(width: 5,),
-                                            Text(
-                                              "Cita creada correctamente",
-                                              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                                            )
-                                          ],
-                                        ),
-                                        duration: const Duration(milliseconds: 2000),
-                                        width: 300,
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-                                        behavior: SnackBarBehavior.floating,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(3.0),
-                                        ),
-                                        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+                                    await SQLHelper.guardarCita(
+                                        _descripcion,
+                                        _selectedDate,
+                                        _selectedColaborador,
+                                        widget.userId);
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Cita creada correctamente",
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255)),
+                                          )
+                                        ],
+                                      ),
+                                      duration:
+                                          const Duration(milliseconds: 2000),
+                                      width: 300,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 10),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(3.0),
+                                      ),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 12, 195, 106),
                                     ));
                                   }
                                 },
