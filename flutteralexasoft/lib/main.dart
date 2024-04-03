@@ -1,8 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
