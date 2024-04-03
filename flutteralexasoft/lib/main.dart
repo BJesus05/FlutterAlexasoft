@@ -9,6 +9,7 @@ import 'package:flutteralexasoft/verUsuario.dart';
 bool _showSplash = true;
 bool _showPassword = false;
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String correo = correoController.text;
     final usuarios =
         await SQLHelper.obtenerUsuariosInicioSesion(correo, contrasena);
-          await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     if (usuarios.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Row(

@@ -53,14 +53,15 @@ class SQLHelper {
         FOREIGN KEY(id_Colaborador) REFERENCES Colaboradores(id)
         )""");
 
-        await database.execute("""INSERT INTO Colaboradores
+    await database.execute("""INSERT INTO Colaboradores
         (nombre) VALUES ("Simon Bolibar"),
         ("Juan Perez"),
         ("Maria Lopez"),
         ("Pedro Ramirez")
         """);
 
-        await database.execute("""INSERT INTO Servicios (nombre,descripcion,tiempoMinutos) VALUES
+    await database.execute(
+        """INSERT INTO Servicios (nombre,descripcion,tiempoMinutos) VALUES
         ("Corte de pelo", "Se le cortara el pelo", 32),
         ("Secado de Pelo", "Se le quitara la humedad al pelo", 15),
         ("Peinado", "Se le peinara el pelo", 40),
@@ -68,13 +69,13 @@ class SQLHelper {
         ("Pintar Uñas", "Se le pintaran las uñas al gusto", 60)
       """);
 
-      await database.execute("""INSERT INTO Paquetes
+    await database.execute("""INSERT INTO Paquetes
       (nombre,descripcion) VALUES
       ("Blower", "Se hara un trabajo espectacular"),
       ("Estilo de Uñas", "Quedaran lindas")
       """);
 
-      await database.execute("""INSERT INTO Paquetes_Servicios(
+    await database.execute("""INSERT INTO Paquetes_Servicios(
         id_Paquete,
         id_Servicio) VALUES
         (1,1),
@@ -84,7 +85,7 @@ class SQLHelper {
         (2,5)
       """);
 
-      await database.execute("""INSERT INTO Usuario(
+    await database.execute("""INSERT INTO Usuario(
         nombre,
         correo,
         instagram,
@@ -93,7 +94,7 @@ class SQLHelper {
       ) VALUES ("Joselito", "jose@gmail.com", "josuel_xxx", "3015648374", "Jose1234#")
       """);
 
-      await database.execute("""INSERT INTO Citas(
+    await database.execute("""INSERT INTO Citas(
         detalle,
         fecha,
         hora,
@@ -102,10 +103,9 @@ class SQLHelper {
         id_Paquete,
         id_Colaborador
         ) VALUES
-        ("Quiero que sean amable conmigo cuando me corten el pelo, tengo miedo", "13/04/2024", "16:30", "En espera", 1, 1, 1)
+        ("Quiero que sean amable conmigo cuando me corten el pelo, tengo miedo", "13/04/2024", "16:30", "En espera", 1, 1, 1),
+        ("Hay final triste", "17/04/2024", "01:30", "En espera", 1, 2, 3)
         """);
-
-
   }
 
   static Future<sql.Database> db() async {
@@ -145,49 +145,71 @@ class SQLHelper {
     return db.query('Colaboradores', orderBy: "id");
   }
 
-static Future<List<Map<String, dynamic>>> obtenerPaquetes() async {
-  final db = await SQLHelper.db();
-  return db.rawQuery('''
+  static Future<List<Map<String, dynamic>>> obtenerPaquetes() async {
+    final db = await SQLHelper.db();
+    return db.rawQuery('''
     SELECT Paquetes.id AS paquete_id, Paquetes.nombre AS paquete_nombre,
            Paquetes.descripcion AS paquete_descripcion,
            Servicios.id AS servicio_id, Servicios.nombre AS servicio_nombre,
            Servicios.descripcion AS servicio_descripcion, Servicios.tiempoMinutos AS servicio_tiempoMinutos
-    FROM Paquetes
-    INNER JOIN Paquetes_Servicios ON Paquetes.id = Paquetes_Servicios.id_Paquete
-    INNER JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
-    ORDER BY Paquetes.id
+          FROM Paquetes
+          INNER JOIN Paquetes_Servicios ON Paquetes.id = Paquetes_Servicios.id_Paquete
+          INNER JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
+          ORDER BY Paquetes.id
   ''');
-}
+  }
 
-  
+  static Future<List<Map<String, dynamic>>> obtenerCitas(int? id) async {
+    final db = await SQLHelper.db();
+    return db.rawQuery('''
+    SELECT Citas.id, Citas.detalle, Citas.fecha, Citas.hora, Citas.estado, 
+       Usuario.nombre AS nombre_usuario,
+       Paquetes.id AS id_paquete, Paquetes.nombre AS nombre_paquete, Paquetes.descripcion AS descripcion_paquete,
+       Servicios.id AS id_servicio, Servicios.nombre AS nombre_servicio, Servicios.descripcion AS descripcion_servicio,
+       Colaboradores.nombre AS nombre_colaborador
+      FROM Citas
+      JOIN Usuario ON Citas.id_Usuario = Usuario.id
+      JOIN Paquetes ON Citas.id_Paquete = Paquetes.id
+      JOIN Colaboradores ON Citas.id_Colaborador = Colaboradores.id
+      LEFT JOIN Paquetes_Servicios ON Paquetes.id = Paquetes_Servicios.id_Paquete
+      LEFT JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
+      WHERE Citas.id_Usuario = $id;
+  ''');
+  }
+
+  static Future<List<Map<String, dynamic>>> obtenerServiciosPaquete(int? idPaquete) async {
+    final db = await SQLHelper.db();
+    return db.rawQuery('''
+    SELECT Servicios.nombre
+FROM Paquetes_Servicios
+JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
+WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
+
+  ''');
+  }
 
   static Future<List<Map<String, dynamic>>> obtenerUsuario(int id) async {
     final db = await SQLHelper.db();
     return db.query('Usuario', where: "id = ?", whereArgs: [id], limit: 1);
   }
 
+  static Future<List<Map<String, dynamic>>> obtenerUsuariosInicioSesion(
+      String correo, String contrasena) async {
+    final db = await SQLHelper.db();
+    return db.query('Usuario',
+        where: "correo = ? AND contrasena = ?",
+        whereArgs: [correo, contrasena],
+        limit: 1);
+  }
 
-static Future<List<Map<String, dynamic>>> obtenerUsuariosInicioSesion(String correo, String contrasena) async {
-  final db = await SQLHelper.db();
-  return db.query('Usuario', where: "correo = ? AND contrasena = ?", whereArgs: [correo, contrasena], limit: 1);
-}
-
-static Future<void> guardarCita(String detalle, DateTime? fecha, String colaborador, int? userId) async {
-  final db = await SQLHelper.db();
-  await db.insert('Citas', {
-    'detalle': detalle,
-    'fecha': fecha.toString(),
-    'id_Usuario': userId, // Guardar el ID del usuario con la cita
-    // Resto de los campos de la cita
-  });
-}
-
-
-
-
-  
-    
-
-  
- 
+  static Future<void> guardarCita(
+      String detalle, DateTime? fecha, String colaborador, int? userId) async {
+    final db = await SQLHelper.db();
+    await db.insert('Citas', {
+      'detalle': detalle,
+      'fecha': fecha.toString(),
+      'id_Usuario': userId, // Guardar el ID del usuario con la cita
+      // Resto de los campos de la cita
+    });
+  }
 }
