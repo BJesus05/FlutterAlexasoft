@@ -2,6 +2,7 @@
 
 import 'dart:core';
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 
 class SQLHelper {
@@ -208,4 +209,10 @@ WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
       'estado' : 'En espera'
     });
   }
+  static Future<bool> verificarCorreoExistente(String correo) async {
+  final db = await SQLHelper.db();
+  final result = await db.rawQuery('SELECT COUNT(*) AS count FROM Usuario WHERE correo = ?', [correo]);
+  final count = Sqflite.firstIntValue(result)!;
+  return count > 0; 
+}
 }
