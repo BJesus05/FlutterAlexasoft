@@ -2,6 +2,7 @@
 
 import 'dart:core';
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:sqflite/sqflite.dart';
 
 class SQLHelper {
   static Future<void> createTables(sql.Database database) async {
@@ -212,4 +213,14 @@ WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
       // Resto de los campos de la cita
     });
   }
+
+
+  static Future<bool> verificarCorreoExistente(String correo) async {
+  final db = await SQLHelper.db();
+  final result = await db.rawQuery('SELECT COUNT(*) AS count FROM Usuario WHERE correo = ?', [correo]);
+  final count = Sqflite.firstIntValue(result)!;
+  return count > 0; // Retorna true si el correo existe en la base de datos
+}
+
+
 }

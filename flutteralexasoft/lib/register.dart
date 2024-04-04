@@ -1,8 +1,11 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'dart:math';
 
 bool _showPassword = false;
 
@@ -28,7 +31,7 @@ class Registrar extends StatelessWidget {
 }
 
 class RegisterPage extends StatefulWidget {
-  final int? userId; // Recibir el ID del usuario como argumento
+  final int? userId;
 
   const RegisterPage({super.key, this.userId});
 
@@ -44,21 +47,139 @@ class _RegisterPageState extends State<RegisterPage> {
   String _nombre = '';
   final _formKey = GlobalKey<FormState>();
   String _password = '';
+  String _verificationCode = ""; // Almacena el código de verificación generado
+
 
 Future<void> _addLibro() async {
-    // Guarda los datos solo si el formulario es válido
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!
-          .save(); // Guarda los valores en las variables correspondientes
-      await SQLHelper.CrearUsuario(
-        _nombre,
-        _correo,
-        _instagram,
-        _telefono.toString(),
-        _password,
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
+
+    final bool correoExistente = await SQLHelper.verificarCorreoExistente(_correo);
+    if (correoExistente) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error de registro'),
+            content: Text('El correo electrónico ya está registrado.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
       );
+      return;
     }
+
+    _verificationCode = generateVerificationCode();
+
+    await sendEmail(_verificationCode);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ingrese el código de verificación'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                _verificationCode = value;
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await verifyVerificationCode();
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
+
+Future<void> verifyVerificationCode() async {
+  if (_verificationCode == _verificationCode) {
+    _formKey.currentState!.save();
+    await SQLHelper.CrearUsuario(
+      _nombre,
+      _correo,
+      _instagram,
+      _telefono.toString(),
+      _password,
+    );
+    print('Registro creado exitosamente');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MyApp(),
+      ),
+    );
+  } else {
+    print('Código de verificación incorrecto');
+  }
+}
+
+Future<void> sendEmail(String verificationCode) async {
+  const String sendGridApiKey = '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'; // Reemplaza con tu propia API Key de SendGrid
+  final String verificationCode = generateVerificationCode();
+
+//====================================NO ELIMINAR POR NADA DEL MUNDO======================================
+  final smtpServer = SmtpServer(
+    'smtp.sendgrid.net',
+    username: 'apikey',
+    password: sendGridApiKey,
+    port: 587, // Puerto para TLS connections
+    // Enable or disable security based on your needs
+    // Enable for SSL connections (port 465) or TLS connections (ports 25 or 587)
+    // ssl: true,
+    // ignoreBadCertificate: true, // Esto es opcional, para ignorar certificados no válidos (¡cuidado en producción!)
+  );
+  //======================================================================================================
+
+  final message = Message()
+    ..from = Address('teamalexasoft@gmail.com', 'Equipo AlexaSoft')
+    ..recipients.add(_correo)
+    ..subject = 'Verificación de correo'
+    ..text = 'Tu código de verificación es: $verificationCode';
+
+  try {
+    final sendReport = await send(message, smtpServer);
+    print('Correo electrónico enviado exitosamente: $sendReport');
+  } catch (e) {
+    print('Error al enviar el correo electrónico: $e');
+  }
+}
+
+
+String generateVerificationCode() {
+
+  const int codigo = 4;
+  final Random random = Random();
+  final StringBuffer buffer = StringBuffer();
+
+  for (int i = 0; i < codigo; i++) {
+    buffer.write(random.nextInt(10));
+  }
+
+  return buffer.toString();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -350,48 +471,7 @@ Future<void> _addLibro() async {
                             child: ElevatedButton(
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    _addLibro(); // Llama a la función para guardar el usuario en la base de datos
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.check_circle,
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "Usuario registrado correctamente",
-                                            style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 255, 255, 255)),
-                                          )
-                                        ],
-                                      ),
-                                      duration:
-                                          const Duration(milliseconds: 2000),
-                                      width: 300,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 10),
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(3.0),
-                                      ),
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 12, 195, 106),
-                                    ));
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const MyApp(),
-                                      ),
-                                    );
+                                    _addLibro();
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
