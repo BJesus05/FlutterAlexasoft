@@ -37,11 +37,12 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String _selectedColaborador = '';
+  int _selectedColaborador = 0;
+  int _selectedPaquete = 0;
   final String _Detalles = '';
   final _formKey = GlobalKey<FormState>();
   String _descripcion = '';
-  DateTime? _selectedDate;
+  DateTime _selectedDate =DateTime.now();
   DateTime? _selectedDateTime;
 
   Future<void> _presentDateTimePicker() async {
@@ -99,18 +100,12 @@ class _RegisterPageState extends State<RegisterPage> {
     obtenerColaboradores();
   }
 
- Future<void> obtenerColaboradores() async {
+  Future<void> obtenerColaboradores() async {
     final colaboradores = await SQLHelper.obtenerColaboradores();
-    setState(() {
-      _colaboradores = colaboradores; 
-    });
-  }
-  void _refreshJournals() async {
-    final colaboradores = await SQLHelper.obtenerColaboradores();
-    final paquetes = await SQLHelper.obtenerPaquetes();
+    final paquete = await SQLHelper.obtenerPaquetes();
     setState(() {
       _colaboradores = colaboradores;
-      _paquetes = paquetes;
+      _paquetes = paquete;
     });
   }
 
@@ -179,50 +174,113 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Row(
                             children: <Widget>[
                               Expanded(
-                                  child: DropdownButtonFormField<int>( // Cambio a tipo int para el ID del colaborador
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                hintText: 'Colaborador',
-                                hintStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                                prefixIcon: Icon(Icons.person),
-                                fillColor: Color.fromARGB(255, 89, 89, 89),
-                                filled: true,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(5),
+                                child: DropdownButtonFormField<int>(
+                                  // Cambio a tipo int para el ID del colaborador
+                                  isExpanded: true,
+                                  decoration: InputDecoration(
+                                    hintText: 'Colaborador',
+                                    hintStyle: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    prefixIcon: Icon(Icons.person),
+                                    fillColor: Color.fromARGB(255, 89, 89, 89),
+                                    filled: true,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  items: _colaboradores
+                                      .map<DropdownMenuItem<int>>(
+                                          (colaborador) {
+                                    return DropdownMenuItem<int>(
+                                      value: colaborador['id'] != null
+                                          ? colaborador['id']
+                                          : null,
+                                      child: Text(colaborador[
+                                          'nombre']),
+                                    );
+                                  }).toList(),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Por favor selecciona el nombre del colaborador';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedColaborador = value!;
+                                    });
+                                  },
+                                  onSaved: (value) {
+                                    setState(() {
+                                      _selectedColaborador = value!; // Asigna el valor seleccionado a _selectedColaborador
+                                    });
+                                  },
                                 ),
                               ),
-                              items: _colaboradores.map<DropdownMenuItem<int>>((colaborador) { // Mapeo usando _colaboradores
-                                return DropdownMenuItem<int>(
-                                  value: colaborador['id'], // Asigna el ID del colaborador como valor
-                                  child: Text(colaborador['nombre']), // Muestra el nombre del colaborador
-                                );
-                              }).toList(),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Por favor selecciona el nombre del colaborador';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedColaborador = value!.toString(); // Asigna el valor seleccionado a _selectedColaborador
-                                });
-                              },
-                              onSaved: (value) {
-                                setState(() {
-                                  _selectedColaborador = value!.toString(); // Asigna el valor seleccionado a _selectedColaborador
-                                });
-                              },
-),),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: SizedBox(
+                                  width: 300,
+                                  child: DropdownButtonFormField<int>(
+                                    decoration: InputDecoration(
+                                      hintText: 'Paquete',
+                                      hintStyle: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                      prefixIcon: Icon(Icons.card_giftcard),
+                                      fillColor:
+                                          Color.fromARGB(255, 89, 89, 89),
+                                      filled: true,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                    items: _paquetes
+                                      .map<DropdownMenuItem<int>>(
+                                          (paquete) {
+                                    return DropdownMenuItem<int>(
+                                      value: paquete['id'] != null
+                                          ? paquete['id']
+                                          : null,
+                                      child: Text(paquete[
+                                          'nombre']),
+                                      );
+                                    }).toList(),
+                                    validator: (value) {
+                                      return 'Por favor selecciona el paquete';
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedPaquete =
+                                            value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -323,7 +381,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         _descripcion,
                                         _selectedDate,
                                         _selectedColaborador,
-                                        widget.userId);
+                                        widget.userId,
+                                        _selectedPaquete);
 
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(

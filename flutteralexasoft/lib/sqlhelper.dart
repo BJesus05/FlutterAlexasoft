@@ -2,7 +2,7 @@
 
 import 'dart:core';
 import 'package:sqflite/sqflite.dart' as sql;
-import 'package:sqflite/sqflite.dart';
+import 'package:intl/intl.dart';
 
 class SQLHelper {
   static Future<void> createTables(sql.Database database) async {
@@ -149,14 +149,7 @@ class SQLHelper {
   static Future<List<Map<String, dynamic>>> obtenerPaquetes() async {
     final db = await SQLHelper.db();
     return db.rawQuery('''
-    SELECT Paquetes.id AS paquete_id, Paquetes.nombre AS paquete_nombre,
-           Paquetes.descripcion AS paquete_descripcion,
-           Servicios.id AS servicio_id, Servicios.nombre AS servicio_nombre,
-           Servicios.descripcion AS servicio_descripcion, Servicios.tiempoMinutos AS servicio_tiempoMinutos
-          FROM Paquetes
-          INNER JOIN Paquetes_Servicios ON Paquetes.id = Paquetes_Servicios.id_Paquete
-          INNER JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
-          ORDER BY Paquetes.id
+    SELECT * FROM Paquetes
   ''');
   }
 
@@ -201,23 +194,18 @@ WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
   }
 
   static Future<void> guardarCita(
-      String detalle, DateTime? fecha, String colaborador, int? userId) async {
+      String detalle, DateTime fecha, int colaborador, int? userId, int idPaquete) async {
+        String fechaFormateada = DateFormat('yyyy-MM-dd').format(fecha);
+  String horaFormateada = DateFormat('HH:mm:ss').format(fecha);
     final db = await SQLHelper.db();
     await db.insert('Citas', {
       'detalle': detalle,
-      'fecha': fecha.toString(),
-      'id_Usuario': userId, // Guardar el ID del usuario con la cita
-      // Resto de los campos de la cita
+      'fecha': fechaFormateada,
+      'hora' : horaFormateada,
+      'id_Usuario': userId,
+      'id_Paquete' : idPaquete,
+      'id_Colaborador' : colaborador,
+      'estado' : 'En espera'
     });
   }
-
-
-  static Future<bool> verificarCorreoExistente(String correo) async {
-  final db = await SQLHelper.db();
-  final result = await db.rawQuery('SELECT COUNT(*) AS count FROM Usuario WHERE correo = ?', [correo]);
-  final count = Sqflite.firstIntValue(result)!;
-  return count > 0; // Retorna true si el correo existe en la base de datos
-}
-
-
 }
