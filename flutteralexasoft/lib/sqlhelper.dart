@@ -160,22 +160,19 @@ class SQLHelper {
   }
 
   static Future<List<Map<String, dynamic>>> obtenerCitas(int? id) async {
-    final db = await SQLHelper.db();
-    return db.rawQuery('''
-    SELECT Citas.id, Citas.detalle, Citas.fecha, Citas.hora, Citas.estado, 
+  final db = await SQLHelper.db();
+  return db.rawQuery('''
+    SELECT DISTINCT Citas.id, Citas.detalle, Citas.fecha, Citas.hora, Citas.estado, 
        Usuario.nombre AS nombre_usuario,
-       Paquetes.id AS id_paquete, Paquetes.nombre AS nombre_paquete, Paquetes.descripcion AS descripcion_paquete,
-       Servicios.id AS id_servicio, Servicios.nombre AS nombre_servicio, Servicios.descripcion AS descripcion_servicio,
-       Colaboradores.nombre AS nombre_colaborador
-      FROM Citas
-      JOIN Usuario ON Citas.id_Usuario = Usuario.id
-      JOIN Paquetes ON Citas.id_Paquete = Paquetes.id
-      JOIN Colaboradores ON Citas.id_Colaborador = Colaboradores.id
-      LEFT JOIN Paquetes_Servicios ON Paquetes.id = Paquetes_Servicios.id_Paquete
-      LEFT JOIN Servicios ON Paquetes_Servicios.id_Servicio = Servicios.id
-      WHERE Citas.id_Usuario = $id;
+       Paquetes.id AS id_paquete, Paquetes.nombre AS nombre_paquete,
+       Colaboradores.nombre AS colaborador
+FROM Citas
+JOIN Usuario ON Citas.id_Usuario = Usuario.id
+JOIN Paquetes ON Citas.id_Paquete = Paquetes.id
+LEFT JOIN Colaboradores ON Citas.id_Colaborador = Colaboradores.id
+WHERE Citas.id_Usuario = $id;
   ''');
-  }
+}
 
   static Future<List<Map<String, dynamic>>> obtenerServiciosPaquete(int? idPaquete) async {
     final db = await SQLHelper.db();
