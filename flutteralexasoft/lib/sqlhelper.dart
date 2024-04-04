@@ -96,7 +96,7 @@ class SQLHelper {
       ) VALUES ("Joselito", "jose@gmail.com", "josuel_xxx", "3015648374", "Jose1234#")
       """);
 
-    await database.execute("""INSERT INTO Citas(
+    /* await database.execute("""INSERT INTO Citas(
         detalle,
         fecha,
         hora,
@@ -107,7 +107,7 @@ class SQLHelper {
         ) VALUES
         ("Quiero que sean amable conmigo cuando me corten el pelo, tengo miedo", "13/04/2024", "16:30", "En espera", 1, 1, 1),
         ("Hay final triste", "17/04/2024", "01:30", "En espera", 1, 2, 3)
-        """);
+        """); */
   }
 
   static Future<sql.Database> db() async {
@@ -197,7 +197,7 @@ WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
   static Future<void> guardarCita(
       String detalle, DateTime fecha, int colaborador, int? userId, int idPaquete) async {
         String fechaFormateada = DateFormat('yyyy-MM-dd').format(fecha);
-  String horaFormateada = DateFormat('HH:mm:ss').format(fecha);
+  String horaFormateada = DateFormat('HH:mm').format(fecha);
     final db = await SQLHelper.db();
     await db.insert('Citas', {
       'detalle': detalle,
