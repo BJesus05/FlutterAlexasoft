@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
@@ -38,10 +40,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   int _selectedColaborador = 0;
   int _selectedPaquete = 0;
-  final String _Detalles = '';
   final _formKey = GlobalKey<FormState>();
   String _descripcion = '';
-  DateTime _selectedDate = DateTime.now();
   DateTime? _selectedDateTime;
   bool _showProgress = false;
 
@@ -72,24 +72,6 @@ class _RegisterPageState extends State<RegisterPage> {
         });
       }
     }
-  }
-
-  void _presentDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2024),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if (pickedDate == null) {
-        return;
-      }
-      setState(() {
-        _selectedDate = pickedDate;
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Selected $_selectedDate")));
-      });
-    });
   }
 
   List<Map<String, dynamic>> _colaboradores = [];
@@ -146,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MyApp(),
+                    builder: (context) => MyApp(),
                   ),
                 );
               },
@@ -192,15 +174,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               isExpanded: true,
                               decoration: InputDecoration(
                                 hintText: 'Colaborador',
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                 ),
-                                prefixIcon: Icon(Icons.person),
-                                fillColor: Color.fromARGB(255, 89, 89, 89),
+                                prefixIcon: const Icon(Icons.person),
+                                fillColor: const Color.fromARGB(255, 89, 89, 89),
                                 filled: true,
                                 contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 10),
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                   borderRadius: BorderRadius.circular(5),
@@ -213,9 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               items: _colaboradores
                                   .map<DropdownMenuItem<int>>((colaborador) {
                                 return DropdownMenuItem<int>(
-                                  value: colaborador['id'] != null
-                                      ? colaborador['id']
-                                      : null,
+                                  value: colaborador['id'],
                                   child: Text(colaborador['nombre']),
                                 );
                               }).toList(),
@@ -251,15 +231,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: DropdownButtonFormField<int>(
                                 decoration: InputDecoration(
                                   hintText: 'Paquete',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                   ),
-                                  prefixIcon: Icon(Icons.card_giftcard),
-                                  fillColor: Color.fromARGB(255, 89, 89, 89),
+                                  prefixIcon: const Icon(Icons.card_giftcard),
+                                  fillColor: const Color.fromARGB(255, 89, 89, 89),
                                   filled: true,
                                   contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 10),
+                                      const EdgeInsets.symmetric(horizontal: 10),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                     borderRadius: BorderRadius.circular(5),
@@ -272,9 +252,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 items: _paquetes
                                     .map<DropdownMenuItem<int>>((paquete) {
                                   return DropdownMenuItem<int>(
-                                    value: paquete['id'] != null
-                                        ? paquete['id']
-                                        : null,
+                                    value: paquete['id'],
                                     child: Text(paquete['nombre']),
                                   );
                                 }).toList(),
@@ -334,12 +312,12 @@ class _RegisterPageState extends State<RegisterPage> {
                             _selectedDateTime == null
                                 ? 'No has seleccionado fecha y hora'
                                 : 'Fecha y Hora: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}',
-                            style: TextStyle(fontSize: 18.0),
+                            style: const TextStyle(fontSize: 18.0),
                           ),
-                          SizedBox(height: 20.0),
+                          const SizedBox(height: 20.0),
                           ElevatedButton(
                             onPressed: _presentDateTimePicker,
-                            child: Text(
+                            child: const Text(
                               'Seleccionar Fecha y Hora',
                               style: TextStyle(
                                   color: Color.fromRGBO(238, 211, 59, 1)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 import 'package:flutteralexasoft/main.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 int contadorCitas = 0;
 
@@ -15,7 +16,7 @@ class Citas extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Raleway',
         colorScheme: const ColorScheme.dark(),
-        scaffoldBackgroundColor: Color.fromARGB(255, 0, 0, 0),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
         textSelectionTheme:
             const TextSelectionThemeData(cursorColor:Color.fromARGB(255, 199, 152, 70)),
       ),
@@ -35,6 +36,7 @@ class CitasPage extends StatefulWidget {
 class _CitasPageState extends State<CitasPage> {
   List<Map<String, dynamic>> citas = [];
   int? userId;
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +66,16 @@ class _CitasPageState extends State<CitasPage> {
     });
   }
 
+  // Método para cerrar sesión
+  Future<void> _logoutUser(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('isLoggedIn'); // Eliminar el estado de la sesión del usuario
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MyApp()), // Redirigir a la página de inicio de sesión
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +95,7 @@ class _CitasPageState extends State<CitasPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MyApp(),
+                    builder: (context) => MyApp(),
                   ),
                 );
               },
@@ -92,12 +104,16 @@ class _CitasPageState extends State<CitasPage> {
               leading: const Icon(Icons.schedule),
               title: const Text('Citas'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Citas(),
-                  ),
-                );
+                Navigator.pop(context);
+              },
+            ),
+            // Nuevo elemento para cerrar sesión
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Cerrar Sesión'),
+              onTap: () {
+                // Llamar al método para cerrar la sesión del usuario
+                _logoutUser(context);
               },
             ),
           ],
@@ -266,51 +282,4 @@ class _CitasPageState extends State<CitasPage> {
       ),
     );
   }
-
-  // showConfirmDelete(BuildContext context) {
-  //   Widget cancelButton = ElevatedButton(
-  //     child: Text("Cancelar"),
-  //     style: ButtonStyle(
-  //       shape: MaterialStateProperty.all(
-  //         RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(16),
-  //         ),
-  //       ),
-  //     ),
-  //     onPressed: () {
-  //       print("Cancelando..");
-  //       Navigator.of(context).pop();
-  //     },
-  //   );
-  //   Widget continueButton = ElevatedButton(
-  //     child: Text("Eliminar"),
-  //     style: ButtonStyle(
-  //       shape: MaterialStateProperty.all(
-  //         RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(16),
-  //         ),
-  //       ),
-  //     ),
-  //     onPressed: () {
-  //       print("Eliminando..");
-  //       // Otras acciones de eliminar
-  //     },
-  //   );
-  //   // set up the AlertDialog
-  //   AlertDialog alert = AlertDialog(
-  //     title: Text("Eliminar cuenta"),
-  //     content: Text("¿Estás seguro de eliminar permanentemente tu cuenta?"),
-  //     actions: [
-  //       cancelButton,
-  //       continueButton,
-  //     ],
-  //   );
-  //   // show the dialog
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return alert;
-  //     },
-  //   );
-  // }
 }

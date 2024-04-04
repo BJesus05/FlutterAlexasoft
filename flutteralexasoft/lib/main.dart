@@ -5,18 +5,17 @@ import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/register.dart';
 import 'package:flutteralexasoft/sqlhelper.dart';
 import 'package:flutteralexasoft/verUsuario.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool _showSplash = true;
 bool _showPassword = false;
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,10 +28,44 @@ class MyApp extends StatelessWidget {
             const TextSelectionThemeData(cursorColor: Colors.white),
       ),
       debugShowCheckedModeBanner: false,
-      home: _showSplash ? const SplashScreen() : const MyHomePage(),
+      home: FutureBuilder<bool>(
+        future: isUserLoggedIn(), // Método para verificar si el usuario ya ha iniciado sesión
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          } else {
+            if (snapshot.hasError) {
+              return Container(
+                child: Center(
+                  child: Text('Error: ${snapshot.error}'),
+                ),
+              );
+            } else {
+              if (snapshot.data == true) {
+                // El usuario ya ha iniciado sesión, muestra la página de citas
+                return Citas();
+              } else {
+                // El usuario no ha iniciado sesión, muestra la página de inicio de sesión
+                return MyHomePage();
+              }
+            }
+          }
+        },
+      ),
     );
   }
+
+  Future<bool> isUserLoggedIn() async {
+    // Aquí debes implementar la lógica para verificar si el usuario ya ha iniciado sesión
+    // Por ejemplo, puedes utilizar SharedPreferences, base de datos local, etc.
+    // Devuelve true si el usuario ya ha iniciado sesión, false en caso contrario
+    // Este es solo un ejemplo de implementación:
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    return isLoggedIn;
+  }
 }
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -106,6 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
         await SQLHelper.obtenerUsuariosInicioSesion(correo, contrasena);
     await Future.delayed(const Duration(seconds: 2));
     if (usuarios.isNotEmpty) {
+      // El inicio de sesión es exitoso
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true); // Guardar el estado de la sesión del usuario
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -127,9 +163,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         backgroundColor: const Color.fromARGB(255, 12, 195, 106),
       ));
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Citas()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Citas()),
+      );
     } else {
+      // El inicio de sesión ha fallado
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Row(
           mainAxisAlignment: MainAxisAlignment.start,

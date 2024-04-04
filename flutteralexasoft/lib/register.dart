@@ -1,4 +1,6 @@
-// ignore_for_file: unused_field, use_build_context_synchronously
+// ignore_for_file: unused_field, use_build_context_synchronously, non_constant_identifier_names, avoid_print
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citas.dart';
 import 'package:flutteralexasoft/main.dart';
@@ -39,7 +41,6 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-
 class _RegisterPageState extends State<RegisterPage> {
   int _telefono = 0;
   String _correo = '';
@@ -47,139 +48,160 @@ class _RegisterPageState extends State<RegisterPage> {
   String _nombre = '';
   final _formKey = GlobalKey<FormState>();
   String _password = '';
-  String _verificationCode = ""; // Almacena el código de verificación generado
+  String ConfirmarCodigo = "";
+  String CodigoCorreo = ""; // Almacena el código de verificación generado
+  bool _isButtonDisabled = false;
+  bool _isLoading = false;
 
+  Future<void> _addLibro() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
 
-Future<void> _addLibro() async {
-  if (_formKey.currentState!.validate()) {
-    _formKey.currentState!.save();
+      final bool correoExistente =
+          await SQLHelper.verificarCorreoExistente(_correo);
+      if (correoExistente) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error de registro'),
+              content: const Text('El correo electrónico ya está registrado.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
 
-    final bool correoExistente = await SQLHelper.verificarCorreoExistente(_correo);
-    if (correoExistente) {
-      showDialog(
+      await sendEmail();
+
+      await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error de registro'),
-            content: Text('El correo electrónico ya está registrado.'),
+            title: const Text('Ingrese el código de verificación'),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  ConfirmarCodigo = value;
+                });
+              },
+            ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (await verifyVerificationCode()) {
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text('Aceptar'),
               ),
             ],
           );
         },
       );
-      return;
     }
-
-    _verificationCode = generateVerificationCode();
-
-    await sendEmail(_verificationCode);
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Ingrese el código de verificación'),
-          content: TextField(
-            onChanged: (value) {
-              setState(() {
-                _verificationCode = value;
-              });
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await verifyVerificationCode();
-                Navigator.of(context).pop();
-              },
-              child: Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
   }
-}
 
-Future<void> verifyVerificationCode() async {
-  if (_verificationCode == _verificationCode) {
-    _formKey.currentState!.save();
-    await SQLHelper.CrearUsuario(
-      _nombre,
-      _correo,
-      _instagram,
-      _telefono.toString(),
-      _password,
-    );
-    print('Registro creado exitosamente');
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const MyApp(),
-      ),
-    );
-  } else {
-    print('Código de verificación incorrecto');
+  Future<bool> verifyVerificationCode() async {
+    if (CodigoCorreo == ConfirmarCodigo) {
+      _formKey.currentState!.save();
+      await SQLHelper.CrearUsuario(
+        _nombre,
+        _correo,
+        _instagram,
+        _telefono.toString(),
+        _password,
+      );
+
+      print('Registro creado exitosamente');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyApp(),
+        ),
+      );
+      return true;
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error de validacion'),
+            content: const Text('El codigo insertado no coincide o esta en blanco.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      print('Código de verificación incorrecto');
+      return false;
+    }
   }
-}
 
-Future<void> sendEmail(String verificationCode) async {
-  const String sendGridApiKey = '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'; // Reemplaza con tu propia API Key de SendGrid
-  final String verificationCode = generateVerificationCode();
+  Future<void> sendEmail() async {
+    const String sendGridApiKey =
+        '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'; // Reemplaza con tu propia API Key de SendGrid
+    final String verificationCode = generateVerificationCode();
+    CodigoCorreo = verificationCode;
 
 //====================================NO ELIMINAR POR NADA DEL MUNDO======================================
-  final smtpServer = SmtpServer(
-    'smtp.sendgrid.net',
-    username: 'apikey',
-    password: sendGridApiKey,
-    port: 587, // Puerto para TLS connections
-    // Enable or disable security based on your needs
-    // Enable for SSL connections (port 465) or TLS connections (ports 25 or 587)
-    // ssl: true,
-    // ignoreBadCertificate: true, // Esto es opcional, para ignorar certificados no válidos (¡cuidado en producción!)
-  );
-  //======================================================================================================
+    final smtpServer = SmtpServer(
+      'smtp.sendgrid.net',
+      username: 'apikey',
+      password: sendGridApiKey,
+      port: 587, // Puerto para TLS connections
+      // Enable or disable security based on your needs
+      // Enable for SSL connections (port 465) or TLS connections (ports 25 or 587)
+      // ssl: true,
+      // ignoreBadCertificate: true, // Esto es opcional, para ignorar certificados no válidos (¡cuidado en producción!)
+    );
+    //======================================================================================================
 
-  final message = Message()
-    ..from = Address('teamalexasoft@gmail.com', 'Equipo AlexaSoft')
-    ..recipients.add(_correo)
-    ..subject = 'Verificación de correo'
-    ..text = 'Tu código de verificación es: $verificationCode';
+    final message = Message()
+      ..from = const Address('teamalexasoft@gmail.com', 'Equipo AlexaSoft')
+      ..recipients.add(_correo)
+      ..subject = 'Verificación de correo'
+      ..text = 'Tu código de verificación es: $verificationCode';
 
-  try {
-    final sendReport = await send(message, smtpServer);
-    print('Correo electrónico enviado exitosamente: $sendReport');
-  } catch (e) {
-    print('Error al enviar el correo electrónico: $e');
-  }
-}
-
-
-String generateVerificationCode() {
-
-  const int codigo = 4;
-  final Random random = Random();
-  final StringBuffer buffer = StringBuffer();
-
-  for (int i = 0; i < codigo; i++) {
-    buffer.write(random.nextInt(10));
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Correo electrónico enviado exitosamente: $sendReport');
+    } catch (e) {
+      print('Error al enviar el correo electrónico: $e');
+    }
   }
 
-  return buffer.toString();
-}
+  String generateVerificationCode() {
+    const int codigo = 4;
+    final Random random = Random();
+    final StringBuffer buffer = StringBuffer();
 
+    for (int i = 0; i < codigo; i++) {
+      buffer.write(random.nextInt(10));
+    }
+
+    return buffer.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +226,7 @@ String generateVerificationCode() {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MyApp(),
+                  builder: (context) => MyApp(),
                 ),
               );
             },
@@ -464,23 +486,44 @@ String generateVerificationCode() {
                         ),
                       ),
                       Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 30),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 45,
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate() &&
+                                    !_isButtonDisabled) {
+                                  setState(() {
                                     _addLibro();
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 27, 29, 29),
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Text('Registrarse')),
-                          )),
+                                    _isLoading = true;
+                                    _isButtonDisabled = true;
+                                  });
+                                  Future.delayed(const Duration(seconds: 10), () {
+                                    setState(() {
+                                      _isLoading = false;
+                                      _isButtonDisabled = false;
+                                    });
+                                    
+                                  });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _isButtonDisabled
+                                    ? Colors.grey
+                                    : const Color.fromARGB(255, 27, 29, 29),
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text('Registrarse'),
+                            ),
+                            if (_isLoading)
+                              const CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                          ],
+                        ),
+                      )
                     ],
                   )),
               Row(
@@ -497,7 +540,7 @@ String generateVerificationCode() {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const MyApp()),
+                        MaterialPageRoute(builder: (context) => MyApp()),
                       );
                     },
                     child: Container(
