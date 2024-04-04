@@ -45,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   String _password = '';
 
-  Future<void> _addLibro() async {
+Future<void> _addLibro() async {
     // Guarda los datos solo si el formulario es válido
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!
