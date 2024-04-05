@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:ejemplo/crear_cita.dart';
+import 'package:ejemplo/sql_helper.dart';
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Inicio de Sesión'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Usuario'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Contraseña'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () async {
+                final username = _usernameController.text;
+                final password = _passwordController.text;
+                // Verificar si las credenciales son válidas
+                final isValid = await SQLHelper.verifyUserCredentials(username, password);
+                if (isValid) {
+                  // Obtener el ID del usuario
+                  final userId = await SQLHelper.getUserId(username, password);
+                  // Navegar a la pantalla de creación de citas y pasar el ID del usuario como parámetro
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CrearCitaPage(userId: userId),
+                    ),
+                  );
+                } else {
+                  // Mostrar un mensaje de error si las credenciales son inválidas
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Error'),
+                      content: Text('Credenciales incorrectas. Por favor, inténtalo de nuevo.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: Text('Iniciar Sesión'),
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () async {
+                final username = _usernameController.text;
+                final password = _passwordController.text;
+                // Verificar si el usuario ya existe
+                final userExists = await SQLHelper.userExists(username);
+                if (userExists) {
+                  // El usuario ya existe, mostrar un mensaje de error
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Error'),
+                      content: Text('El usuario ya existe. Por favor, inicia sesión.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  // Guardar el nuevo usuario en la base de datos
+                  await SQLHelper.saveUser(username, password);
+                  // Mostrar un mensaje de éxito y permitir al usuario iniciar sesión
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Éxito'),
+                      content: Text('El usuario ha sido registrado. Puedes iniciar sesión ahora.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: Text('Registrar'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
