@@ -7,15 +7,16 @@ import 'package:flutteralexasoft/sqlhelper.dart';
 import 'package:flutteralexasoft/verUsuario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool _showSplash = true;
 bool _showPassword = false;
 
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,21 +33,19 @@ class MyApp extends StatelessWidget {
         future: isUserLoggedIn(), // Método para verificar si el usuario ya ha iniciado sesión
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return SplashScreen();
+            return const SplashScreen();
           } else {
             if (snapshot.hasError) {
-              return Container(
-                child: Center(
-                  child: Text('Error: ${snapshot.error}'),
-                ),
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
               );
             } else {
               if (snapshot.data == true) {
                 // El usuario ya ha iniciado sesión, muestra la página de citas
-                return Citas();
+                return const Citas();
               } else {
                 // El usuario no ha iniciado sesión, muestra la página de inicio de sesión
-                return MyHomePage();
+                return const MyHomePage();
               }
             }
           }
@@ -165,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ));
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Citas()),
+        MaterialPageRoute(builder: (context) => const Citas()),
       );
     } else {
       // El inicio de sesión ha fallado

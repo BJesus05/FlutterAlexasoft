@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutteralexasoft/citasCreate.dart';
 import 'package:flutteralexasoft/main.dart';
@@ -72,7 +74,7 @@ class _CitasPageState extends State<CitasPage> {
     prefs.remove('isLoggedIn'); // Eliminar el estado de la sesión del usuario
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => MyApp()), // Redirigir a la página de inicio de sesión
+      MaterialPageRoute(builder: (context) => const MyApp()), // Redirigir a la página de inicio de sesión
     );
   }
 
@@ -95,7 +97,7 @@ class _CitasPageState extends State<CitasPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyApp(),
+                    builder: (context) => const MyApp(),
                   ),
                 );
               },

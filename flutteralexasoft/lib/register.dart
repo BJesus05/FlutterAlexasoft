@@ -131,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyApp(),
+          builder: (context) => const MyApp(),
         ),
       );
       return true;
@@ -226,7 +226,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyApp(),
+                  builder: (context) => const MyApp(),
                 ),
               );
             },
@@ -540,7 +540,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyApp()),
+                        MaterialPageRoute(builder: (context) => const MyApp()),
                       );
                     },
                     child: Container(
