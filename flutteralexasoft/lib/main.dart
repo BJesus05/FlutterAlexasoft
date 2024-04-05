@@ -9,13 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 bool _showPassword = false;
 
-
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, int? userId});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,8 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: FutureBuilder<bool>(
-        future: isUserLoggedIn(), // Método para verificar si el usuario ya ha iniciado sesión
+        future:
+            isUserLoggedIn(), // Método para verificar si el usuario ya ha iniciado sesión
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SplashScreen();
@@ -64,7 +64,6 @@ class MyApp extends StatelessWidget {
     return isLoggedIn;
   }
 }
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -140,7 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (usuarios.isNotEmpty) {
       // El inicio de sesión es exitoso
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('isLoggedIn', true); // Guardar el estado de la sesión del usuario
+      prefs.setBool(
+          'isLoggedIn', true); // Guardar el estado de la sesión del usuario
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -162,9 +162,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         backgroundColor: const Color.fromARGB(255, 12, 195, 106),
       ));
+      final userId = await SQLHelper.getUserId(correo, contrasena);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Citas()),
+        MaterialPageRoute(
+          builder: (context) => Citas(userId: userId),
+        ),
       );
     } else {
       // El inicio de sesión ha fallado

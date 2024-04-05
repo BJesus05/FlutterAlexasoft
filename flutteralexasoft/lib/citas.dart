@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 int contadorCitas = 0;
 
 class Citas extends StatelessWidget {
-  const Citas({super.key});
+  const Citas({super.key, int? userId});
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +37,11 @@ class CitasPage extends StatefulWidget {
 
 class _CitasPageState extends State<CitasPage> {
   List<Map<String, dynamic>> citas = [];
-  int? userId;
+  
 
   @override
   void initState() {
     super.initState();
-    obtenerIdUsuario();
     obtenerCitas();
   }
 
@@ -59,14 +58,7 @@ class _CitasPageState extends State<CitasPage> {
     return await SQLHelper.obtenerServiciosPaquete(idPaquete);
   }
 
-  Future<void> obtenerIdUsuario() async {
-    final user =
-        await SQLHelper.obtenerUsuariosInicioSesion('correo', 'contrasena');
-    final userIdTemp = user.isNotEmpty ? user[0]['id'] : null;
-    setState(() {
-      userId = userIdTemp;
-    });
-  }
+
 
   // Método para cerrar sesión
   Future<void> _logoutUser(BuildContext context) async {

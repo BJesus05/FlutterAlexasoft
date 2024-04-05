@@ -7,9 +7,8 @@ import 'package:flutteralexasoft/sqlhelper.dart';
 import 'package:intl/intl.dart';
 
 class RegistrarCitas extends StatelessWidget {
-  final int? userId;
 
-  const RegistrarCitas({super.key, this.userId});
+  const RegistrarCitas({super.key, int? userId});
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +178,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.white,
                                 ),
                                 prefixIcon: const Icon(Icons.person),
-                                fillColor: const Color.fromARGB(255, 89, 89, 89),
+                                fillColor:
+                                    const Color.fromARGB(255, 89, 89, 89),
                                 filled: true,
                                 contentPadding:
                                     const EdgeInsets.symmetric(horizontal: 10),
@@ -236,10 +236,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     color: Colors.white,
                                   ),
                                   prefixIcon: const Icon(Icons.card_giftcard),
-                                  fillColor: const Color.fromARGB(255, 89, 89, 89),
+                                  fillColor:
+                                      const Color.fromARGB(255, 89, 89, 89),
                                   filled: true,
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(horizontal: 10),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                     borderRadius: BorderRadius.circular(5),
@@ -335,16 +336,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               setState(() {
-                                _showProgress = true; // Muestra el indicador de progreso
+                                _showProgress =
+                                    true; // Muestra el indicador de progreso
                               });
                               await SQLHelper.guardarCita(
                                   _descripcion,
                                   _selectedDateTime!,
                                   _selectedColaborador,
-                                  widget.userId,
+                                  widget.userId!,
                                   _selectedPaquete);
                               setState(() {
-                                _showProgress = false; // Oculta el indicador de progreso
+                                _showProgress = false;
                               });
 
                               // Redirigir a la página principal después de un tiempo
@@ -352,7 +354,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 27, 29, 29),
+                            backgroundColor:
+                                const Color.fromARGB(255, 27, 29, 29),
                             foregroundColor: Colors.white,
                           ),
                           child: const Text('Crear Cita',

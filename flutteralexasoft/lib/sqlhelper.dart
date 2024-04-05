@@ -154,6 +154,19 @@ class SQLHelper {
   ''');
   }
 
+  static Future<List<Map<String, dynamic>>> getCitasByUserId(int userId) async {
+    final db = await SQLHelper.db();
+    return await db.query('citas', where: 'userId = ?', whereArgs: [userId]);
+  }
+  static Future<bool> userExists(String correo) async {
+    final db = await SQLHelper.db();
+    final count = Sqflite.firstIntValue(await db.rawQuery(
+      'SELECT COUNT(*) FROM Usuario WHERE correo = ?',
+      [correo],
+    ));
+    return count! > 0;
+  }
+
   static Future<List<Map<String, dynamic>>> obtenerCitas(int? id) async {
   final db = await SQLHelper.db();
   return db.rawQuery('''
@@ -180,11 +193,6 @@ WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
   ''');
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerUsuario(int id) async {
-    final db = await SQLHelper.db();
-    return db.query('Usuario', where: "id = ?", whereArgs: [id], limit: 1);
-  }
-
   static Future<List<Map<String, dynamic>>> obtenerUsuariosInicioSesion(
       String correo, String contrasena) async {
     final db = await SQLHelper.db();
@@ -192,6 +200,19 @@ WHERE Paquetes_Servicios.id_Paquete = $idPaquete;
         where: "correo = ? AND contrasena = ?",
         whereArgs: [correo, contrasena],
         limit: 1);
+  }
+
+  static Future<int?> getUserId(String correo, String contrasena) async {
+    final db = await SQLHelper.db();
+    final user = await db.query('Usuario',
+        columns: ['id'],
+        where: 'correo = ? AND contrasena = ?',
+        whereArgs: [correo, contrasena]);
+    if (user.isNotEmpty) {
+      return user.first['id'] as int;
+    } else {
+      return null;
+    }
   }
 
   static Future<void> guardarCita(
